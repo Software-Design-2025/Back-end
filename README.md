@@ -26,3 +26,25 @@ Response:
     }
 }
 ```
+
+## 1.2. Local login
+POST /api/auth/login/local
+
+Request: 
+
+```json
+{
+    "username": "minhhuy",
+    "password": "123456789"
+}
+```
+
+Response Cookie:
+- refreshToken
+- accessToken
+
+## 1.3. Logout
+GET /api/auth/logout
+
+## 1.4. Refresh Token
+GET /api/auth/refresh-token
