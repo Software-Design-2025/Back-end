@@ -8,5 +8,6 @@ router.get('/login/google/callback', UsersC.googleCallback);
 router.get('/login/facebook', UsersC.facebookLogin);
 router.get('/login/facebook/callback', UsersC.facebookCallback);
 router.get('/logout', UsersC.logout);
+router.get('/refresh-token', UsersC.refreshToken);
 
 module.exports = router;

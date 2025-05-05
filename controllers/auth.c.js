@@ -133,4 +133,32 @@ module.exports = {
         res.clearCookie('accessToken');
         res.status(200).json({ message: 'Logged out successfully' });
     },
+
+    refreshToken: async (req, res) => {
+        const refreshToken = req.cookies.refreshToken;
+        if (!refreshToken) {
+            return res.status(401).json({ message: 'You are not authenticated' });
+        }
+
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+            if (err) {
+                return res.status(403).json({ message: 'Invalid refresh token' });
+            }
+
+            const accessToken = jwt.sign(
+                { id: user.id, fullname: user.fullname },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: '30m' }
+            );
+
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'strict',
+                maxAge: 30 * 60 * 1000
+            });
+
+            res.status(200).json({ accessToken });
+        });
+    }
 }

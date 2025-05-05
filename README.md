@@ -45,3 +45,6 @@ Response Cookie:
 
 ## 1.3. Logout
 GET /api/auth/logout
+
+## 1.4. Refresh Token
+GET /api/auth/refresh-token
