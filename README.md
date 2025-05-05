@@ -27,7 +27,7 @@ Response:
 }
 ```
 
-## 2.2. Local login
+## 1.2. Local login
 POST /api/auth/login/local
 
 Request: 
@@ -42,3 +42,6 @@ Request:
 Response Cookie:
 - refreshToken
 - accessToken
+
+## 1.3. Logout
+GET /api/auth/logout

@@ -7,5 +7,6 @@ router.get('/login/google', UsersC.googleLogin);
 router.get('/login/google/callback', UsersC.googleCallback);
 router.get('/login/facebook', UsersC.facebookLogin);
 router.get('/login/facebook/callback', UsersC.facebookCallback);
+router.get('/logout', UsersC.logout);
 
 module.exports = router;

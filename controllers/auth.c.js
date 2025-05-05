@@ -126,5 +126,11 @@ module.exports = {
 
     facebookCallback: async (req, res, next) => {
         passport.authenticate('facebook', { session: false }, callback(req, res))(req, res, next);
-    }
+    },
+
+    logout: async (req, res) => {
+        res.clearCookie('refreshToken');
+        res.clearCookie('accessToken');
+        res.status(200).json({ message: 'Logged out successfully' });
+    },
 }
