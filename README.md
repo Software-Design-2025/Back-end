@@ -84,3 +84,23 @@
     ]
 }
 ```
+
+## 2. Create speech from text
+POST /api/voices
+
+### Request
+
+```json
+{
+    "voice": "Mikail-PlayAI",
+    "text": "I love building and shipping new features for our users!"
+}
+```
+
+### Response
+
+```json
+{
+    "url": "http://res.cloudinary.com/dvar3w9dm/video/upload/v1746807785/ctxi5znqbczqywdzsyyx.mp3"
+}
+```

@@ -13,4 +13,24 @@ module.exports = {
         return res.status(200).json(data);
     },
 
+    createSpeech: async (req, res) => {
+        try {
+            const response = await groq.audio.speech.create({
+                model: 'playai-tts',
+                voice: req.body.voice || 'Arista-PlayAI',
+                input: req.body.text,
+                response_format: 'mp3'
+            });
+    
+            const buffer = Buffer.from(await response.arrayBuffer());
+            const url = await upload(buffer, 'video', 'mp3');
+
+            return res.status(201).json({
+                url: url
+            });
+        }
+        catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+    }
 }
