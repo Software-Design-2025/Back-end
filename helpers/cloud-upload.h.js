@@ -2,7 +2,6 @@ const cloudinary = require('../config/cloudinary.config');
 const streamifier = require('streamifier');
 
 const upload = (buffer, resourceType, format) => {
-    console.log(resourceType, format);
     return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream({
             resource_type: resourceType,
