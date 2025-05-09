@@ -1,8 +1,8 @@
 # 1. Authentication
 ## 1.1. Register
-POST /api/auth/register
+### POST /api/auth/register
 
-Request:
+### Request:
 
 ```json
 {
@@ -13,7 +13,7 @@ Request:
 }
 ```
 
-Response:
+### Response:
 
 ```json
 {
@@ -28,9 +28,9 @@ Response:
 ```
 
 ## 1.2. Local login
-POST /api/auth/login/local
+### POST /api/auth/login/local
 
-Request: 
+### Request: 
 
 ```json
 {
@@ -39,12 +39,48 @@ Request:
 }
 ```
 
-Response Cookie:
+### Response Cookie:
 - refreshToken
 - accessToken
 
 ## 1.3. Logout
-GET /api/auth/logout
+### GET /api/auth/logout
 
 ## 1.4. Refresh Token
-GET /api/auth/refresh-token
+### GET /api/auth/refresh-token
+
+# 2. Voice
+## 2.1. Get list of sample voices
+### GET /api/voices/sample
+
+### Query Parameters
+
+- **page**: Page number to retrieve (default: 1) 
+- **per_page**: Number of items per page (default: 5)
+
+### Response
+
+```json
+{
+    "page": 1,
+    "total_pages": 4,
+    "per_page": 3,
+    "voices": [
+        {
+            "_id": "681e25c33d7be1d6da1c25f0",
+            "name": "Arista-PlayAI",
+            "url": "http://res.cloudinary.com/dvar3w9dm/video/upload/v1746806282/yl0rpkpoi8tfq7k4w9gv.mp3"
+        },
+        {
+            "_id": "681e26633d7be1d6da1c25f1",
+            "name": "Atlas-PlayAI",
+            "url": "http://res.cloudinary.com/dvar3w9dm/video/upload/v1746806368/fddkoxgoxrkodm5rqtdr.mp3"
+        },
+        {
+            "_id": "681e26813d7be1d6da1c25f2",
+            "name": "Basil-PlayAI",
+            "url": "http://res.cloudinary.com/dvar3w9dm/video/upload/v1746806430/bgrmawea6qn4d56akzk5.mp3"
+        }
+    ]
+}
+```
