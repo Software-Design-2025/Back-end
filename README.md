@@ -104,3 +104,72 @@ POST /api/voices
     "url": "http://res.cloudinary.com/dvar3w9dm/video/upload/v1746807785/ctxi5znqbczqywdzsyyx.mp3"
 }
 ```
+
+# 3. Topic
+## 3.1. Provide trending topics
+POST /api/topics/trending
+
+### Request
+
+```json
+{
+    "keyword": "brainrot"
+}
+```
+
+### Response
+
+```json
+[
+    {
+        "no": 1,
+        "topic": "Skibidi Toilet Compilation",
+        "description": "Endless loops of Skibidi Toilet animations, often set to repetitive music. Known for its nonsensical nature and simple animation."
+    },
+    {
+        "no": 2,
+        "topic": "Ohio Sigma Male Edits",
+        "description": "Videos featuring exaggerated and often absurd portrayals of 'Sigma Males' in Ohio, showcasing bizarre scenarios and illogical actions."
+    },
+    {
+        "no": 3,
+        "topic": "Gyatt Level Commentary",
+        "description": "Videos commentating on or highlighting a person's physical features using slang like 'Gyatt', often in a humorous or exaggerated way."
+    },
+    {
+        "no": 4,
+        "topic": "NPC TikTok Live Streams",
+        "description": "Live streams where creators mimic non-player characters (NPCs) from video games, repeating phrases and performing repetitive actions for virtual gifts."
+    },
+    {
+        "no": 5,
+        "topic": "Brainrot Quiz Compilations",
+        "description": "Compilation videos showcasing short, random, and often absurd quizzes or personality tests."
+    },
+    {
+        "no": 6,
+        "topic": "Ambatukam Meme Variations",
+        "description": "Variations of the 'Ambatukam' meme, often involving unexpected edits, remixes, and increasingly absurd contexts."
+    },
+    {
+        "no": 7,
+        "topic": "Corn Kid Remixes",
+        "description": "Remixes and parodies based on the viral 'Corn Kid' interview, often pushed to excessive and repetitive levels."
+    },
+    {
+        "no": 8,
+        "topic": "Alphabet Lore Animations",
+        "description": "Animations and videos based on the 'Alphabet Lore' series, often focusing on simplistic and repetitive storylines."
+    },
+    {
+        "no": 9,
+        "topic": "Friday Night Funkin' Mods",
+        "description": "Gameplay videos and modifications of the rhythm game 'Friday Night Funkin', often showcasing bizarre and nonsensical character designs and storylines."
+    },
+    {
+        "no": 10,
+        "topic": "Number Lore Animations",
+        "description": "Animations and videos based on the 'Number Lore' series, often focusing on simplistic and repetitive storylines (similar to Alphabet Lore)."
+    }
+]
+```
