@@ -44,8 +44,8 @@ module.exports = {
             let subtitle = 'WEBVTT\n\n'
 
             for (const segment of transcription.segments) {
-                start = toTimestamp(segment.start);
-                end = toTimestamp(segment.end);
+                const start = toTimestamp(segment.start);
+                const end = toTimestamp(segment.end);
                 subtitle += `${start} --> ${end}\n`;
                 subtitle += `${segment.text}\n\n`;
             }
