@@ -20,7 +20,7 @@ app.use('/routers/generate-caption', require('./routers/generate-caption.r'));
 app.use('/routers/generate-image', require('./routers/generate-image.r'));
 app.use('/routers/get-user-detail', require('./routers/get-user-detail.r'));
 app.use('/routers/update-user-credits', require('./routers/update-user-credits.r'));
-app.use('/routers/get-video-script', require('./routers/get-video-script.r'));
+app.use('/routers/generate-video-script', require('./routers/generate-video-script.r'));
 app.use('/routers/proxy-audio', require('./routers/proxy-audio.r'));
 app.use('/routers/get-video-createdBy', require('./routers/get-video-createdBy.r'));
 
@@ -41,14 +41,20 @@ app.listen(PORT, () => {
         });
 
 
-    fetch(`http://localhost:${PORT}/routers/get-video-script`, {
+    fetch(`http://localhost:${PORT}/routers/generate-video-script`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: 'write a script to generate 30 seconds video on topic: Historycal story along with AI image prompt in Realistic format for each scene and give me result in JSON format with imagePrompt and ContentText as field' })
     })
-        .then(res => res.json())
-        .then(data => {
-            console.log('Test get-video-script:', data);
+        .then(async res => {
+            const contentType = res.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                const data = await res.json();
+                console.log('Test get-video-script:', data);
+            } else {
+                const text = await res.text();
+                console.error('Test get-video-script error: Not JSON, response text:', text);
+            }
         })
         .catch(err => {
             console.error('Test get-video-script error:', err);
