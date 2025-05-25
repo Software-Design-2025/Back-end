@@ -39,4 +39,18 @@ app.listen(PORT, () => {
         .catch(err => {
             console.error('Test get-user-detail error:', err);
         });
+
+
+    fetch(`http://localhost:${PORT}/routers/get-video-script`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: 'write a script to generate 30 seconds video on topic: Historycal story along with AI image prompt in Realistic format for each scene and give me result in JSON format with imagePrompt and ContentText as field' })
+    })
+        .then(res => res.json())
+        .then(data => {
+            console.log('Test get-video-script:', data);
+        })
+        .catch(err => {
+            console.error('Test get-video-script error:', err);
+        });
 });

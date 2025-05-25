@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getVideosByCreatedBy } = require('../controllers/videoController.c');
+const { generateVideoScript } = require('../controllers/scriptController.c');
 
-router.get('/', (req, res) => {
-    getVideosByCreatedBy(req, res);
+router.post('/', (req, res) => {
+    generateVideoScript(req, res);
 });
 
 module.exports = router;

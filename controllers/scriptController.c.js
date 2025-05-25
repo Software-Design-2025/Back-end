@@ -1,9 +1,12 @@
-import { sendPromptToGemini } from "@/configs/AIModel";
-import { NextResponse } from "next/server";
+const { sendPromptToGemini } = require("../config/AIModel.config"); 
 
-export async function generateVideoScript(req) {
+async function generateVideoScript(req, res) {
     try {
-        const { prompt } = await req.json();
+        const { prompt } = req.body;
+        if (!prompt) {
+            return res.status(400).json({ error: "Missing prompt" });
+        }
+
         const text = await sendPromptToGemini(prompt);
 
         let jsonString = text;
@@ -11,15 +14,20 @@ export async function generateVideoScript(req) {
         if (jsonMatch) {
             jsonString = jsonMatch[1];
         }
+
         let jsonResult;
         try {
             jsonResult = JSON.parse(jsonString);
         } catch (e) {
-            return NextResponse.json({ error: "AI response is not valid JSON", raw: jsonString }, { status: 500 });
+            return res.status(500).json({ error: "AI response is not valid JSON", raw: jsonString });
         }
 
-        return NextResponse.json({ result: jsonResult });
+        return res.json({ result: jsonResult });
     } catch (e) {
-        return NextResponse.json({ error: e.message }, { status: 500 });
+        return res.status(500).json({ error: e.message });
     }
 }
+
+module.exports = {
+    generateVideoScript
+};
