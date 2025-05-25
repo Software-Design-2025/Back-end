@@ -1,0 +1,29 @@
+{
+  "name": "ai-short-video-generator",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@google-cloud/text-to-speech": "^6.1.0",
+    "@google/genai": "^0.14.1",
+    "assemblyai": "^4.12.2",
+    "axios": "^1.9.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "firebase": "^11.7.3",
+    "mime": "^4.0.7",
+    "mongoose": "^8.15.0",
+    "next-themes": "^0.4.6",
+    "replicate": "^1.0.1",
+    "request": "^2.88.2",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
