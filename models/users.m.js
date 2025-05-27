@@ -2,10 +2,10 @@ const connectDB = require("../config/db.config");
 const { ObjectId } = require("mongodb");
 
 module.exports = {
-    findOne: async (id) => {
+    findOne: async (query) => {
         const db = await connectDB();
         const collection = db.collection("users");
-        const user = await collection.findOne({ _id: ObjectId.createFromHexString(id) });
+        const user = await collection.findOne(query);
         return user;
     },
 

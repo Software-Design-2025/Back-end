@@ -1,13 +1,14 @@
 const UsersM = require('../models/users.m');
 const upload = require('../helpers/cloud-upload.h');
 const cloudinary = require('../config/cloudinary.config');
+const { ObjectId } = require("mongodb");
 
 module.exports = {
     updateAvatar: async (req, res) => {
         try {
             const avatar = await upload(req.file.buffer, 'image', 'png');
             const id = req.params.id;
-            const user = await UsersM.findOne(id);
+            const user = await UsersM.findOne({ _id: ObjectId.createFromHexString(id) });
 
             if (user.avatar != process.env.DEFAULT_AVATAR) {
                 await cloudinary.uploader.destroy(user.avatar.split('/').pop().split('.')[0], { invalidate: true });
@@ -43,7 +44,7 @@ module.exports = {
 
     getUser: async (req, res) => {
         try {
-            const user = await UsersM.findOne(req.params.id);
+            const user = await UsersM.findOne({ _id: ObjectId.createFromHexString(req.params.id) });
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
