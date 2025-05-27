@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const whitelist = process.env.CORS_ORIGINS.split(',');
+const whitelist = process.env.CORS_ORIGINS.trim().split(',');
 
 module.exports = {
     origin: function (origin, callback) {

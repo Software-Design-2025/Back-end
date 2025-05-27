@@ -60,7 +60,8 @@ module.exports = {
                 username,
                 email,
                 password: hashedPassword,
-                provider: 'local'
+                provider: 'local',
+                avatar: process.env.DEFAULT_AVATAR
             });
 
             res.status(201).json({ 
