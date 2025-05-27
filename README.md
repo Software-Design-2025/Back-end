@@ -174,7 +174,7 @@
 
 ## 4.2. Get public videos
 ### GET /api/videos/public
-## Response
+### Response
 ```json
 {
     "page": 1,
@@ -193,5 +193,19 @@
             }
         }
     ]
+}
+```
+
+# 5. User
+## 5.1. Update avatar
+### PUT /api/users/:id/avatar
+
+## 5.2. Update profile (fullname)
+### PUT /api/users/:id/profile
+
+### Request
+```json
+{
+    "fullname": "Nguyen Tran Van Anh"
 }
 ```

@@ -24,5 +24,20 @@ module.exports = {
         catch (error) {
             return res.status(500).json({ message: 'Internal server error' });
         }
+    },
+
+    updateProfile: async (req, res) => {
+        try {
+            const success = await UsersM.updateOne(req.params.id, { fullname: req.body.fullname });
+            if (!success) {
+                return res.status(400).json({ message: 'Failed to update profile' });
+            }
+            return res.status(200).json({
+                message: 'Profile updated successfully'
+            });
+        }
+        catch (error) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
     }
 }
