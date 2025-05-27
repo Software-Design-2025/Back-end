@@ -13,7 +13,7 @@ module.exports = {
                 await cloudinary.uploader.destroy(user.avatar.split('/').pop().split('.')[0], { invalidate: true });
             }
 
-            const success = UsersM.updateOne(id, { avatar });
+            const success = await UsersM.updateOne(id, { avatar });
             if (!success) {
                 return res.status(400).json({ message: 'Failed to update avatar' });
             }
