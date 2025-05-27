@@ -87,7 +87,7 @@
 
 # 3. Topic
 ## 3.1. Provide trending topics
-POST /api/topics/trending
+### POST /api/topics/trending
 
 ### Request
 
@@ -152,4 +152,46 @@ POST /api/topics/trending
         "description": "Animations and videos based on the 'Number Lore' series, often focusing on simplistic and repetitive storylines (similar to Alphabet Lore)."
     }
 ]
+```
+
+# 4. Video
+## 4.1. Get video by ID
+### GET /api/videos/:id
+### Response:
+```json
+{
+    "_id": "6834c37db0248073cd595c9b",
+    "url": "http://res.cloudinary.com/dvar3w9dm/video/upload/v1746806282/yl0rpkpoi8tfq7k4w9gv.mp4",
+    "created_at": "2025-05-27T17:00:00.000Z",
+    "favorites": 12,
+    "owner": {
+        "_id": "681869ff7e7e9262a28e06b4",
+        "fullname": "Nguyen Van Anh",
+        "avatar": "$url"
+    }
+}
+```
+
+## 4.2. Get public videos
+### GET /api/videos/public
+## Response
+```json
+{
+    "page": 1,
+    "page_size": 10,
+    "total_pages": 1,
+    "data": [
+        {
+            "_id": "6834c37db0248073cd595c9b",
+            "url": "http://res.cloudinary.com/dvar3w9dm/video/upload/v1746806282/yl0rpkpoi8tfq7k4w9gv.mp4",
+            "created_at": "2025-05-27T17:00:00.000Z",
+            "favorites": 12,
+            "owner": {
+                "_id": "681869ff7e7e9262a28e06b4",
+                "fullname": "Nguyen Van Anh",
+                "avatar": "$url"
+            }
+        }
+    ]
+}
 ```
