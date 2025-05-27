@@ -1,10 +1,11 @@
 const connectDB = require("../config/db.config");
+const { ObjectId } = require("mongodb");
 
 module.exports = {
-    findOne: async (query) => {
+    findOne: async (id) => {
         const db = await connectDB();
         const collection = db.collection("users");
-        const user = await collection.findOne(query);
+        const user = await collection.findOne({ _id: ObjectId.createFromHexString(id) });
         return user;
     },
 
@@ -18,5 +19,15 @@ module.exports = {
             username: user.username,
             email: user.email
         }
+    },
+
+    updateOne: async (id, info) => {
+        const db = await connectDB();
+        const collection = db.collection("users");
+        const result = await collection.updateOne(
+            { _id: ObjectId.createFromHexString(id) },
+            { $set: info }
+        );
+        return result.modifiedCount > 0;
     }
 }
