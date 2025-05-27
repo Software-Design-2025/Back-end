@@ -204,8 +204,24 @@
 ### PUT /api/users/:id/profile
 
 ### Request
+
 ```json
 {
     "fullname": "Nguyen Tran Van Anh"
+}
+```
+
+## 5.3. Get user
+### GET /api/users/:id
+
+### Response
+
+```json
+{
+    "id": "681869ff7e7e9262a28e06b4",
+    "fullname": "Nguyen Tran Van Anh",
+    "username": "bonghoaxinh",
+    "email": "vananh.nva@gmail.com",
+    "avatar": "http://res.cloudinary.com/dvar3w9dm/image/upload/v1748338540/vlx2cunnf4taa79ar3zq.png"
 }
 ```
