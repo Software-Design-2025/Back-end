@@ -1,4 +1,4 @@
-const { ai, Type} = require("../config/google-ai.config");
+const { ai, Type } = require("../config/google-ai.config");
 
 module.exports = {
     getTrendingTopics: async (req, res) => {
