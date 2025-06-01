@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const { MongoClient, ServerApiVersion } = require("mongodb");
 require("dotenv").config();
 
@@ -20,3 +21,18 @@ module.exports = async () => {
         throw error;
     }
 }
+=======
+const mongoose = require('mongoose');
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('MongoDB connected');
+  } catch (error) {
+    console.error('Connection error:', error);
+    process.exit(1);
+  }
+};
+
+module.exports = connectDB;
+>>>>>>> generate-video

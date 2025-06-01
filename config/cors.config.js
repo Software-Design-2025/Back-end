@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 require('dotenv').config();
 
 const whitelist = process.env.CORS_ORIGINS.trim().split(',');
@@ -11,3 +12,13 @@ module.exports = {
         }
     }
 }
+=======
+const corsOptions = {
+    origin: '*', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
+
+module.exports = corsOptions;
+>>>>>>> generate-video
