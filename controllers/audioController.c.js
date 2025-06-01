@@ -7,6 +7,29 @@ const client = new textToSpeech.TextToSpeechClient({
     apiKey: process.env.GOOGLE_API_KEY
 });
 
+async function uploadAudioToFirebase (req, res) {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+        const filename = req.body.filename || req.file.originalname;
+        const storageRef = ref(storage, 'ai-short-video-files/' + filename);
+
+        try {
+            const url = await getDownloadURL(storageRef);
+            return res.json({ url });
+        } catch (err) {
+            if (err.code !== 'storage/object-not-found') throw err;
+            await uploadBytes(storageRef, req.file.buffer, { contentType: req.file.mimetype || 'audio/mp3' });
+            const downloadUrl = await getDownloadURL(storageRef);
+            return res.json({ url: downloadUrl });
+        }
+    } catch (e) {
+        console.error('uploadAudioToFirebase error:', e);
+        res.status(500).json({ error: e.message });
+    }
+};
+
 async function generateAudio(req, res) {
     try {
         const { text, id } = req.body;
@@ -29,4 +52,7 @@ async function generateAudio(req, res) {
     }
 }
 
-module.exports = { generateAudio };
+module.exports = { 
+    generateAudio,
+    uploadAudioToFirebase 
+};

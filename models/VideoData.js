@@ -20,6 +20,10 @@ const videoDataSchema = new mongoose.Schema({
   createdBy: {
     type: String,
     required: true
+  },
+  public: { 
+    type: Boolean, 
+    default: false 
   }
 });
 
