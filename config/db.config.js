@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const { MongoClient, ServerApiVersion } = require("mongodb");
 require("dotenv").config();
 
@@ -21,7 +20,6 @@ module.exports = async () => {
         throw error;
     }
 }
-=======
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
@@ -35,4 +33,3 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
->>>>>>> generate-video
