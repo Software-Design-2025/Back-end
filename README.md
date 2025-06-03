@@ -259,10 +259,10 @@ Array các topic trending.
 ### 6. User
 
 #### 6.1. Update avatar
-**PUT** `/api/users/:id/avatar`
+**PATCH** `/api/users/:id/avatar`
 
 #### 6.2. Update profile (fullname)
-**PUT** `/api/users/:id/profile`
+**PATCH** `/api/users/:id/profile`
 ```json
 {
   "fullname": "Nguyen Tran Van Anh"
