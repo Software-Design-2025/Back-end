@@ -4,7 +4,8 @@ const cors = require('cors');
 const passport = require('passport');
 require('dotenv').config();
 require('./config/passport.config');
-const corsOptions = require('./config/cors.config'); 
+const corsOptions = require('./config/cors.config');
+const connectDB = require('./config/db.config');
 
 const app = express();
 
@@ -44,12 +45,13 @@ app.use('/routers/save-audio-file', require('./routers/save-audio-file.r'));
 
 const PORT = process.env.SERVER_PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    await connectDB();
     console.log(`Server is running on http://localhost:${PORT}`);
 
-    const fetch = require('node-fetch');
+    // const fetch = require('node-fetch');
 
-    const testEmail = 'phongvan2032004@gmail.com';
+    // const testEmail = 'phongvan2032004@gmail.com';
     // fetch(`http://localhost:${PORT}/routers/get-user-detail?email=${encodeURIComponent(testEmail)}`)
     //     .then(res => res.json())
     //     .then(data => {
@@ -131,28 +133,28 @@ app.listen(PORT, () => {
     //     });
 
     // Test save-video-edit
-    fetch(`http://localhost:${PORT}/routers/save-video-edit/api/save-video-edit`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            videoId: '683045d5c6ffb4d2be16a9b1',
-            fontFamily: 'Arial',
-            fontSize: 18,
-            textColor: '#000000',
-            textAnimation: 'fadeIn',
-            bgAnimation: 'slideUp',
-            sticker: 'star',
-            stickerWidth: 100,
-            stickerHeight: 100,
-            audioUrl: 'https://example.com/audio.mp3',
-            screenSize: '1920x1080'
-        })
-    })
-        .then(res => res.json())
-        .then(data => {
-            console.log('Test save-video-edit:', data);
-        })
-        .catch(err => {
-            console.error('Test save-video-edit error:', err);
-        });
+    // fetch(`http://localhost:${PORT}/routers/save-video-edit/api/save-video-edit`, {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({
+    //         videoId: '683045d5c6ffb4d2be16a9b1',
+    //         fontFamily: 'Arial',
+    //         fontSize: 18,
+    //         textColor: '#000000',
+    //         textAnimation: 'fadeIn',
+    //         bgAnimation: 'slideUp',
+    //         sticker: 'star',
+    //         stickerWidth: 100,
+    //         stickerHeight: 100,
+    //         audioUrl: 'https://example.com/audio.mp3',
+    //         screenSize: '1920x1080'
+    //     })
+    // })
+    //     .then(res => res.json())
+    //     .then(data => {
+    //         console.log('Test save-video-edit:', data);
+    //     })
+    //     .catch(err => {
+    //         console.error('Test save-video-edit error:', err);
+    //     });
 });
