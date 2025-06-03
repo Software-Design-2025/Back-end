@@ -32,13 +32,15 @@ passport.use(
     async function verify(accessToken, refreshToken, profile, cb) {
         let user = await Users.findOne({ profile_id: profile.id, provider: 'google' });
         if (!user) {
-            user = await Users.insertOne({
+            user = new Users({
                 fullname: profile.displayName,
                 email: profile.emails[0].value,
                 profile_id: profile.id,
                 avatar: profile.photos[0].value,
                 provider: 'google'
             });
+
+            user = await user.save();
         }
         cb(null, user, { message: 'Logged in successfully' });
     })
@@ -54,12 +56,14 @@ passport.use(
     async function verify(accessToken, refreshToken, profile, cb) {
         let user = await Users.findOne({ profile_id: profile.id, provider: 'facebook' });
         if (!user) {
-            user = await Users.insertOne({
+            user = new Users ({
                 fullname: profile.displayName,
                 profile_id: profile.id,
                 avatar: profile.photos[0].value,
                 provider: 'facebook'
             });
+
+            user = await user.save();
         }
         cb(null, user, { message: 'Logged in successfully' });
     }

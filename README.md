@@ -43,22 +43,16 @@ Server sẽ chạy tại [http://localhost:3000](http://localhost:3000) (hoặc 
 **POST** `/api/auth/register`
 ```json
 {
-    "username" : "minhhuy",
-    "fullname": "Le Minh Huy",
-    "password": "123456789",
-    "email": "minhhuy.97@gmail.com"
+	"username": "khoile@12",
+	"fullname": "Tran Anh Khoi",
+	"password": "123456789",
+	"email": "khoi.tran@gmail.com"
 }
 ```
 **Response:**
 ```json
 {
-    "message": "New user created",
-    "user": {
-        "id": "68186b9e0adabaddf0bf4b09",
-        "fullname": "Le Minh Huy",
-        "username": "minhhuy",
-        "email": "minhhuy.97@gmail.com"
-    }
+  	"_id": "683ea39812741298576bd529"
 }
 ```
 
@@ -70,9 +64,12 @@ Server sẽ chạy tại [http://localhost:3000](http://localhost:3000) (hoặc 
     "password": "123456789"
 }
 ```
-**Response Cookie:**  
-- refreshToken  
-- accessToken
+**Response:**  
+```json
+{
+	"message": "Logged in successfully"
+}
+```
 
 #### 1.3. Logout
 **GET** `/api/auth/logout`
