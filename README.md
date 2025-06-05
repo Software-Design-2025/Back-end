@@ -102,21 +102,37 @@ Server sẽ chạy tại [http://localhost:3000](http://localhost:3000) (hoặc 
 }
 ```
 
----
-
 ### 3. Topic
 
-#### 3.1. Provide trending topics
-**POST** `/api/topics/trending`
-```json
-{
-    "keyword": "brainrot"
-}
-```
-**Response:**  
-Array các topic trending.
+#### 3.1. Get trending topics using AI
+**GET** `/api/topics/ai?keyword=`
 
----
+**Response:**  
+```json
+[
+  {
+    "no": 1,
+    "topic": "Solar Panel DIY Projects",
+    "description": "Homeowners and hobbyists are exploring DIY solar panel installations for powering small devices, lighting, or even contributing to home energy. Tutorials, cost breakdowns, and efficiency tips are highly sought after."
+  }
+]
+```
+
+#### 3.2. Get topic from Springer Nature
+**GET** `/api/topic/springer-nature?keyword=`
+
+**Response:**
+```json
+[
+    {
+    "id": "doi:10.1007/s43621-025-01069-0",
+    "title": "Multi-model MCDM framework for sustainable renewable energy selection in India: integrating CRITIC-EDAS-CODAS-CoCoSo",
+    "url": "http://dx.doi.org/10.1007/s43621-025-01069-0",
+    "abstract": "A new framework identifies the most suitable renewable energy sources for India’s unique needs. Hydropower ranks highest, with solar and wind as strong alternatives for sustainable energy development. Study offers insights for policymakers on balancing efficiency, costs, and environmental impact in energy planning."
+  }
+]
+```
+
 
 ### 4. Video
 
