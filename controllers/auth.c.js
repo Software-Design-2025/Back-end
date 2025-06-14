@@ -18,7 +18,7 @@ const callback = (req, res) => (err, user, info) => {
     const refreshToken = jwt.sign(
         { id: user._id },
         process.env.REFRESH_TOKEN_SECRET,
-        { expiresIn: '1d' }
+        { expiresIn: '30d' }
     );
 
     res.cookie('refreshToken', refreshToken, {
@@ -90,7 +90,7 @@ module.exports = {
             const refreshToken = jwt.sign(
                 { id: user._id},
                 process.env.REFRESH_TOKEN_SECRET,
-                { expiresIn: '1d' }
+                { expiresIn: '30d' }
             );
 
             res.cookie('refreshToken', refreshToken, {
