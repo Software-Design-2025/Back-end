@@ -23,6 +23,7 @@ app.use('/api/voices', require('./routers/voices.r'));
 app.use('/api/topics', require('./routers/topics.r'));
 app.use('/api/videos', require('./routers/videos.r'));
 app.use('/api/users', require('./routers/users.r'));
+app.use('/api/youtube', require('./routers/youtube.r'));
 
 // Routers
 app.use('/routers/save-video-data', require('./routers/save-video-data.r'));
