@@ -421,6 +421,40 @@ Server sẽ chạy tại [http://localhost:3000](http://localhost:3000) (hoặc 
 
 ---
 
+### 11. Upload video to Youtube
+
+#### 11.1. Link Youtube account
+
+**GET** `/api/youtube/auth`
+
+#### 11.2. Upload video
+
+**POST** `/api/youtube/upload`
+
+**Request**
+
+```json
+{
+  "account_id": "UCzFcpKj6EaN9WYo19L_UmYg",
+  "url": "https://res.cloudinary.com/dvar3w9dm/video/upload/v1748435432/jo3vjndxvxmlkoquy7zh.mp4",
+  "title": "Test upload to youtube",
+  "privacy_status": "public",
+  "description": "Today is 14/6/2025"
+}
+```
+
+**Response**
+
+```json
+{
+  "message": "Video uploaded successfully",
+  "video": {
+    "id": "nK75ROlZv8k",
+    "url": "https://www.youtube.com/watch?v=nK75ROlZv8k"
+  }
+}
+```
+
 ## Notes
 
 - Một số API có thể yêu cầu xác thực hoặc truyền token, hãy kiểm tra lại cấu hình bảo mật nếu triển khai thực tế.

@@ -1,0 +1,169 @@
+const { ObjectId } = require("mongodb");
+const { google } = require('googleapis');
+const url = require('url');
+const streamifier = require('streamifier');
+const SocialAccount = require('../models/social-accounts.m');
+
+module.exports = {
+    auth: async (req, res) => {
+        try {
+            const oauth2Client = new google.auth.OAuth2(
+                process.env.GOOGLE_CLIENT_ID,
+                process.env.GOOGLE_CLIENT_SECRET,
+                `${process.env.HOSTNAME}/api/youtube/auth/callback`
+            );
+
+            const scopes = [
+                'https://www.googleapis.com/auth/youtube',
+                'https://www.googleapis.com/auth/youtube.upload',
+                'https://www.googleapis.com/auth/youtube.force-ssl'
+            ];
+
+            const authorizationUrl = oauth2Client.generateAuthUrl({
+                access_type: 'offline',
+                scope: scopes,
+                include_granted_scopes: true,
+                prompt: 'consent',
+                state: req.user._id.toString()
+            });
+
+            res.redirect(authorizationUrl);
+        }
+        catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+    },
+
+    authCallback: async (req, res) => {
+        try {
+            const oauth2Client = new google.auth.OAuth2(
+                process.env.GOOGLE_CLIENT_ID,
+                process.env.GOOGLE_CLIENT_SECRET,
+                `${process.env.HOSTNAME}/api/youtube/auth/callback`
+            );
+
+            let q = url.parse(req.url, true).query;
+            const userId = q.state;
+
+            if (q.error) {
+                throw new Error(q.error_description || 'YouTube authentication failed');
+            } else {
+                let { tokens } = await oauth2Client.getToken({
+                    code: q.code,
+                    codeVerifier: ''
+                });
+                oauth2Client.setCredentials(tokens);
+
+                const service = google.youtube({
+                    version: 'v3',
+                    auth: oauth2Client
+                });
+
+                const channelsListResponse = await service.channels.list({
+                    part: 'id,snippet',
+                    mine: true
+                });
+
+                if (!channelsListResponse.data.items || channelsListResponse.data.items.length === 0) {
+                    return res.status(400).json({ message: 'No YouTube channel found for this account.' });
+                }
+
+                const channel = channelsListResponse.data.items[0];
+                const account = await SocialAccount.findOneAndUpdate(
+                    {
+                        user_id: ObjectId.createFromHexString(userId),
+                        platform: 'youtube',
+                        account_id: channel.id
+                    },
+                    {
+                        $set: {
+                            username: channel.snippet.title,
+                            tokens: {
+                                access_token: tokens.access_token,
+                                refresh_token: tokens.refresh_token
+                            }
+                        }
+                    },
+                    {
+                        new: true,     
+                        upsert: true    
+                    }
+                );
+
+                return res.status(200).json({
+                    message: 'YouTube account linked successfully'
+                });
+            }
+        } catch (error) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    },
+
+    uploadVideo: async (req, res) => {
+        try {
+            const oauth2Client = new google.auth.OAuth2(
+                process.env.GOOGLE_CLIENT_ID,
+                process.env.GOOGLE_CLIENT_SECRET,
+                `${process.env.HOSTNAME}/api/youtube/auth/callback`
+            );
+
+            const account = await SocialAccount.findOne({
+                user_id: ObjectId.createFromHexString(req.user._id),
+                platform: 'youtube',
+                account_id: req.body.account_id
+            });
+            oauth2Client.setCredentials(account.tokens);
+
+            const youtube = google.youtube({
+                version: 'v3',
+                auth: oauth2Client,
+            });
+
+            const response = await fetch(req.body.url);
+            const arrayBuffer = await response.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            const stream = streamifier.createReadStream(buffer);
+
+            const uploadResponse = await youtube.videos.insert({
+                part: 'id,snippet,status',
+                requestBody: {
+                    snippet: {
+                        title: req.body.title,
+                        description: req.body.description,
+                    },
+                    status: {
+                        embeddable: true,
+                        privacyStatus: req.body.privacy_status,
+                    },
+                },
+                media: {
+                    body: stream
+                },
+            });
+
+            await SocialAccount.findOneAndUpdate(
+                {
+                    user_id: ObjectId.createFromHexString(req.user._id),
+                    platform: 'youtube',
+                    account_id: req.body.account_id
+                },
+                {
+                    $addToSet: {
+                        videos: uploadResponse.data.id
+                    }
+                }
+            );
+
+            return res.status(200).json({
+                message: 'Video uploaded successfully',
+                video: {
+                    id: uploadResponse.data.id,
+                    url: `https://www.youtube.com/watch?v=${uploadResponse.data.id}`,
+                }
+            });
+        }
+        catch (error) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    }
+}
