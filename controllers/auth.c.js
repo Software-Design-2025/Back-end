@@ -24,14 +24,14 @@ const callback = (req, res) => (err, user, info) => {
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: false,
-        sameSite: 'strict',
+        sameSite: 'lax',
         maxAge: 30 * 24 * 60 * 60 * 1000
     });
 
     res.cookie('accessToken', accessToken, {
         httpOnly: true,
         secure: false,
-        sameSite: 'strict',
+        sameSite: 'lax',
         maxAge: 30 * 60 * 1000
     });
 
