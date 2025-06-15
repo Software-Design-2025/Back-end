@@ -12,7 +12,13 @@ async function uploadAudioToFirebase (req, res) {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
+        let blob = req.file.buffer;
         const filename = req.body.filename || req.file.originalname;
+
+        if (!blob || !Buffer.isBuffer(blob) || blob.length === 0) {
+            return res.status(400).json({ error: 'Audio blob is empty or invalid' });
+        }
+
         const storageRef = ref(storage, 'ai-short-video-files/' + filename);
 
         try {
@@ -20,7 +26,7 @@ async function uploadAudioToFirebase (req, res) {
             return res.json({ url });
         } catch (err) {
             if (err.code !== 'storage/object-not-found') throw err;
-            await uploadBytes(storageRef, req.file.buffer, { contentType: req.file.mimetype || 'audio/mp3' });
+            await uploadBytes(storageRef, blob, { contentType: req.file.mimetype || 'audio/mp3' });
             const downloadUrl = await getDownloadURL(storageRef);
             return res.json({ url: downloadUrl });
         }
@@ -52,7 +58,36 @@ async function generateAudio(req, res) {
     }
 }
 
+async function getAudioLink(req, res) {
+    try {
+        let name = req.query.name;
+        if (!name) {
+            return res.status(400).json({ error: "Missing name param" });
+        }
+        if (!name.toLowerCase().endsWith(".mp3")) {
+            name = name + ".mp3";
+        }
+        const nameMap = {
+            "happy.mp3": "Happy.mp3",
+            "piano.mp3": "Piano.mp3",
+            "violin.mp3": "Violin.mp3"
+        };
+        name = nameMap[name.toLowerCase()] || name;
+
+        const storageRef = ref(storage, 'ai-short-video-files/' + name);
+        try {
+            const url = await getDownloadURL(storageRef);
+            return res.status(200).json({ url });
+        } catch (err) {
+            return res.status(404).json({ error: "Not found" });
+        }
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+}
+
 module.exports = { 
     generateAudio,
-    uploadAudioToFirebase 
+    uploadAudioToFirebase,
+    getAudioLink
 };

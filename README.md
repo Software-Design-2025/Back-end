@@ -35,127 +35,193 @@ Server sẽ chạy tại [http://localhost:3000](http://localhost:3000) (hoặc 
 
 ---
 
+### 4. Chạy dev tool inngest
+```bash
+npx inngest-cli@latest dev
+```
+
 ## API Documentation
 
-### 1. Authentication
+### 1. User APIs
 
-#### 1.1. Register
-**POST** `/api/auth/register`
+#### GET /routers/users/detail
+Lấy thông tin user theo id.
+- Query: `id`
+- Response: user object
+
+#### POST /routers/users/update-credits
+Cập nhật credits cho user.
 ```json
 {
-    "username" : "minhhuy",
-    "fullname": "Le Minh Huy",
-    "password": "123456789",
-    "email": "minhhuy.97@gmail.com"
+  "id": "userId",
+  "credits": 10
 }
 ```
-**Response:**
-```json
-{
-    "message": "New user created",
-    "user": {
-        "id": "68186b9e0adabaddf0bf4b09",
-        "fullname": "Le Minh Huy",
-        "username": "minhhuy",
-        "email": "minhhuy.97@gmail.com"
-    }
-}
-```
-
-#### 1.2. Local login
-**POST** `/api/auth/login/local`
-```json
-{
-    "username": "minhhuy",
-    "password": "123456789"
-}
-```
-**Response Cookie:**  
-- refreshToken  
-- accessToken
-
-#### 1.3. Logout
-**GET** `/api/auth/logout`
-
-#### 1.4. Refresh Token
-**GET** `/api/auth/refresh-token`
+- Response: `{ success: true, result: { ...user } }`
 
 ---
 
-### 2. Voice
+### 2. Video APIs
 
-#### 2.1. Get list of sample voices
-**GET** `/api/voices/sample`
-- **page**: Page number (default: 1)
-- **per_page**: Items per page (default: 5)
-
-**Response:**
+#### POST /routers/video/save-data
+Lưu video mới.
 ```json
 {
-    "page": 1,
-    "total_pages": 4,
-    "per_page": 3,
-    "voices": [
-        {
-            "_id": "681e25c33d7be1d6da1c25f0",
-            "name": "Arista-PlayAI",
-            "url": "http://res.cloudinary.com/dvar3w9dm/video/upload/v1746806282/yl0rpkpoi8tfq7k4w9gv.mp3"
-        }
-    ]
+  "script": "...",
+  "audioFileUrl": "...",
+  "captions": [...],
+  "imageList": [...],
+  "createdBy": "userId",
+  "public": true
+}
+```
+- Response: `{ id: "..." }`
+
+#### GET /routers/video/get-data?id=VIDEO_ID
+Lấy thông tin video theo id.
+
+#### POST /routers/video/generate-script
+Sinh script video AI (nếu có).
+
+#### GET /routers/video/by-creator?id=USER_ID
+Lấy danh sách video theo user.
+
+#### GET /routers/video/public
+Lấy danh sách video public.
+
+#### PATCH /routers/video/public-status
+Cập nhật trạng thái public cho video.
+```json
+{
+  "videoId": "...",
+  "public": true
+}
+```
+
+#### POST /routers/video/save-edit
+Lưu cấu hình chỉnh sửa video.
+```json
+{
+  "videoId": "...",
+  "fontFamily": "...",
+  "fontSize": 18,
+  "textColor": "#000",
+  "textAnimation": "...",
+  "bgAnimation": "...",
+  "sticker": "...",
+  "stickerWidth": 100,
+  "stickerHeight": 100,
+  "audioUrl": "...",
+  "screenSize": "1920x1080"
+}
+```
+
+#### POST /routers/video/save-link
+Lưu link video output.
+```json
+{
+  "videoId": "...",
+  "videoOutputUrl": "..."
+}
+```
+
+#### POST /routers/video/generate-caption
+Sinh caption từ audio.
+
+#### POST /routers/video/generate-image
+Sinh ảnh AI.
+
+#### POST /routers/video/add-favorite
+Thêm video vào danh sách yêu thích.
+```json
+{
+  "userId": "...",
+  "videoId": "..."
+}
+```
+
+#### GET /routers/video/favorites?userId=...
+Lấy danh sách video đã yêu thích.
+
+#### POST /routers/video/remove-favorite
+Xóa video khỏi danh sách yêu thích.
+```json
+{
+  "userId": "...",
+  "videoId": "..."
 }
 ```
 
 ---
 
-### 3. Topic
+### 3. Audio APIs
 
-#### 3.1. Provide trending topics
-**POST** `/api/topics/trending`
+#### POST /routers/audio/generate
+Sinh audio từ text.
 ```json
 {
-    "keyword": "brainrot"
+  "text": "...",
+  "id": "audioId"
 }
 ```
-**Response:**  
-Array các topic trending.
+- Response: `{ Result: "audioUrl" }`
+
+#### POST /routers/audio/save
+Upload file audio lên Firebase.
+- Form-data: `audio` (file), `filename` (optional)
+- Response: `{ url: "audioUrl" }`
+
+#### GET /routers/audio/link?name=Happy.mp3
+Lấy link audio mẫu từ Firebase.
+- Response: `{ url: "audioUrl" }`
+
+#### GET /routers/audio/proxy?url=...
+Proxy audio từ Firebase (bypass CORS).
 
 ---
 
-### 4. Video
+### 4. Inngest APIs
 
-#### 4.1. Get video by ID
-**GET** `/api/videos/:id`
-**Response:**
+#### POST /api/inngest/render-cloud-video
+Trigger Inngest function RenderCloudVideo.
 ```json
 {
-    "_id": "6834c37db0248073cd595c9b",
-    "url": "...",
-    "created_at": "...",
-    "favorites": 12,
-    "owner": {
-        "_id": "681869ff7e7e9262a28e06b4",
-        "fullname": "Nguyen Van Anh",
-        "avatar": "$url"
-    }
+  // event data 
 }
 ```
 
-#### 4.2. Get public videos
-**GET** `/api/videos/public`
-**Response:**
+#### POST /api/inngest/render-promo-video
+Trigger Inngest function render/promo-video.
 ```json
 {
-    "page": 1,
-    "page_size": 10,
-    "total_pages": 1,
-    "data": [
-        {
-            "_id": "6834c37db0248073cd595c9b",
-            "url": "...",
-            "created_at": "...",
-            "favorites": 12,
-            "owner": {
-                "_id": "681869ff7e7e9262a28e06b4",
+  "videoId": "...",
+  "videoData": { ... }
+}
+```
+- Response: `{ url: "videoUrl" }`
+---
+
+## Notes
+
+- Một số API có thể yêu cầu xác thực hoặc truyền token, hãy kiểm tra lại cấu hình bảo mật nếu triển khai thực tế.
+- Đảm bảo các biến môi trường đã được thiết lập đúng.
+- Nếu dùng MongoDB Atlas, cần whitelist IP của bạn trên Atlas dashboard.
+
+---
+
+## Tech Stack
+
+- Node.js, Express
+- MongoDB (Mongoose)
+- Firebase Storage
+- AssemblyAI, Google Cloud TTS, Replicate API
+- Inngest (event-driven workflow)
+
+---
+
+## License
+
+MIT
                 "fullname": "Nguyen Van Anh",
                 "avatar": "$url"
             }

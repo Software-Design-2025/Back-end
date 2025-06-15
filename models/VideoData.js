@@ -24,7 +24,11 @@ const videoDataSchema = new mongoose.Schema({
   public: { 
     type: Boolean, 
     default: false 
-  }
+  },
+  videoOutputUrl: {
+    type: String,
+    default: ''
+  },
 });
 
 const VideoData = mongoose.models.VideoData || mongoose.model('VideoData', videoDataSchema);
