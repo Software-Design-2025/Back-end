@@ -1,12 +1,12 @@
 const { ai, Type } = require("../config/google-ai.config");
 
 module.exports = {
-    getTrendingTopics: async (req, res) => {
+    getTopicUsingAI: async (req, res) => {
         try {
             const response = await ai.models.generateContent({
                 model: "gemini-2.0-flash",
                 contents: `
-                    Provide a list of the top 10 trending topics on social media platforms — TikTok, YouTube Shorts, Instagram Reels, and Facebook — that are associated with the keyword "${req.body.keyword}". 
+                    Provide a list of the top 10 trending topics on social media platforms — TikTok, YouTube Shorts, Instagram Reels, and Facebook — that are associated with the keyword "${req.query.keyword}". 
                     For each topic, include the following fields: 
                     - no: The number of the topic
                     - topic: The title of the topic
@@ -35,6 +35,39 @@ module.exports = {
             const data = JSON.parse(text);
             return res.status(200).json(data);
         } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+    },
+
+    getTopicUsingSpringerNature: async (req, res) => {
+        try {
+            const keyword = req.query.keyword;
+            if (!keyword) {
+                return res.status(400).json({ message: "Keyword is required." });
+            }
+
+            let url = 'https://api.springernature.com/openaccess/json';
+            url += `?api_key=${process.env.SPRINGER_API_KEY}`;
+            url += `&q=keyword${encodeURIComponent(':' + keyword)}`;
+
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const records = data.records.map(record => {
+                return {
+                    id: record.identifier,
+                    title: record.title,
+                    url: record.url[0].value,
+                    abstract: record.abstract.p
+                }
+            })
+
+            return res.status(200).json(records);
+        }
+        catch (error) {
             return res.status(500).json({ message: error.message });
         }
     }

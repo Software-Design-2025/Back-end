@@ -8,8 +8,8 @@ const userController = require('../controllers/users.c');
 // GET /routers/users/detail?id=...
 router.get('/detail', userController.getUserDetail);
 
-router.put('/:id/avatar', upload.single('avatar'), UsersC.updateAvatar);
-router.put('/:id/profile', UsersC.updateProfile);
+router.patch('/:id/avatar', upload.single('avatar'), UsersC.updateAvatar);
+router.patch('/:id/profile', UsersC.updateProfile);
 router.get('/:id', UsersC.getUser);
 router.post('/update-credits', userController.updateUserCredits);
 

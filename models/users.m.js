@@ -1,33 +1,23 @@
-const connectDB = require("../config/db.config");
-const { ObjectId } = require("mongodb");
+const mongoose = require('mongoose');
 
-module.exports = {
-    findOne: async (query) => {
-        const db = await connectDB();
-        const collection = db.collection("users");
-        const user = await collection.findOne(query);
-        return user;
+const usersSchema = new mongoose.Schema({
+    fullname: {
+        type: String,
+        required: true
     },
-
-    insertOne: async (user) => {
-        const db = await connectDB();
-        const collection = db.collection("users");
-        const result = await collection.insertOne(user);
-        return {
-            id: result.insertedId,
-            fullname: user.fullname,
-            username: user.username,
-            email: user.email
-        }
+    username: String,
+    password: String,
+    email: String,
+    avatar: {
+        type: String,
+        default: 'https://i.pinimg.com/736x/2a/53/70/2a5370c752b7f4bd65766f3550afdb5d.jpg'
     },
-
-    updateOne: async (id, info) => {
-        const db = await connectDB();
-        const collection = db.collection("users");
-        const result = await collection.updateOne(
-            { _id: ObjectId.createFromHexString(id) },
-            { $set: info }
-        );
-        return result.modifiedCount > 0;
+    profile_id: String,
+    provider: {
+        type: String,
+        enum: ['google', 'facebook', 'local'],
+        default: 'local'
     }
-}
+});
+
+module.exports = mongoose.models.users || mongoose.model('users', usersSchema);

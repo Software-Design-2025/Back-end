@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const whitelist = process.env.CORS_ORIGINS.trim().split(',');
 
 module.exports = {
@@ -11,11 +9,11 @@ module.exports = {
         }
     }
 }
-const corsOptions = {
-    origin: '*', 
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-};
+// const corsOptions = {
+//     origin: '*', 
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//     credentials: true
+// };
 
-module.exports = corsOptions;
+// module.exports = corsOptions;

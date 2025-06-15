@@ -25,8 +25,13 @@ app.use('/api/users', require('./routers/users.r'));
 app.use('/api/video', require('./routers/video.r'));
 app.use('/api/audio', require('./routers/audio.r'));
 app.use('/api/inngest', require('./routers/inngest.r'));
+app.use('/api/youtube', require('./routers/youtube.r'));
 
 app.use('/routers/video', require('./routers/video.r'));
+app.use('/routers/users', require('./routers/users.r'));
+app.use('/routers/audio', require('./routers/audio.r'));
+app.use('/routers/inngest', require('./routers/inngest.r'));
+app.use('/routers/users', require('./routers/users.r'));
 
 const PORT = process.env.SERVER_PORT || 3000;
 

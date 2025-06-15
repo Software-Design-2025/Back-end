@@ -1,7 +1,6 @@
 const Users = require('../models/users.m');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
 const saltRounds = 10;
 const passport = require('passport');
 
@@ -11,28 +10,28 @@ const callback = (req, res) => (err, user, info) => {
     }
 
     const accessToken = jwt.sign(
-        { id: user._id, fullname: user.fullname },
+        { id: user._id },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: '30m' }
     );
 
     const refreshToken = jwt.sign(
-        { id: user._id, fullname: user.fullname },
+        { id: user._id },
         process.env.REFRESH_TOKEN_SECRET,
-        { expiresIn: '1d' }
+        { expiresIn: '30d' }
     );
 
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: false,
-        sameSite: 'strict',
+        sameSite: 'lax',
         maxAge: 30 * 24 * 60 * 60 * 1000
     });
 
     res.cookie('accessToken', accessToken, {
         httpOnly: true,
         secure: false,
-        sameSite: 'strict',
+        sameSite: 'lax',
         maxAge: 30 * 60 * 1000
     });
 
@@ -55,21 +54,20 @@ module.exports = {
             }
 
             const hashedPassword = await bcrypt.hash(password, saltRounds);
-            const newUser = await Users.insertOne({
+            const newUser = new Users({
                 fullname, 
                 username,
                 email,
-                password: hashedPassword,
-                provider: 'local',
-                avatar: process.env.DEFAULT_AVATAR
+                password: hashedPassword
             });
 
-            res.status(201).json({ 
-                message: 'New user created',
-                user: newUser
+            const savedUser = await newUser.save();
+
+            return res.status(201).json({
+                _id: savedUser._id,
             });
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            return res.status(500).json({ message: error.message });
         }
     },
 
@@ -84,15 +82,15 @@ module.exports = {
             }
 
             const accessToken = jwt.sign(
-                { id: user._id, fullname: user.fullname },
+                { id: user._id },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '30m' }
             );
 
             const refreshToken = jwt.sign(
-                { id: user._id, fullname: user.fullname },
+                { id: user._id},
                 process.env.REFRESH_TOKEN_SECRET,
-                { expiresIn: '1d' }
+                { expiresIn: '30d' }
             );
 
             res.cookie('refreshToken', refreshToken, {
@@ -147,7 +145,7 @@ module.exports = {
             }
 
             const accessToken = jwt.sign(
-                { id: user.id, fullname: user.fullname },
+                { id: user.id },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '30m' }
             );

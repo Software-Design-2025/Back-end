@@ -57,7 +57,33 @@ Cập nhật credits cho user.
   "credits": 10
 }
 ```
-- Response: `{ success: true, result: { ...user } }`
+**Response:**
+```json
+{
+  	"_id": "683ea39812741298576bd529"
+}
+```
+
+#### 1.2. Local login
+**POST** `/api/auth/login/local`
+```json
+{
+    "username": "minhhuy",
+    "password": "123456789"
+}
+```
+**Response:**  
+```json
+{
+	"message": "Logged in successfully"
+}
+```
+
+#### 1.3. Logout
+**GET** `/api/auth/logout`
+
+#### 1.4. Refresh Token
+**GET** `/api/auth/refresh-token`
 
 ---
 
@@ -177,8 +203,37 @@ Lấy link audio mẫu từ Firebase.
 
 #### GET /routers/audio/proxy?url=...
 Proxy audio từ Firebase (bypass CORS).
+### 3. Topic
 
----
+#### 3.1. Get trending topics using AI
+**GET** `/api/topics/ai?keyword=`
+
+**Response:**  
+```json
+[
+  {
+    "no": 1,
+    "topic": "Solar Panel DIY Projects",
+    "description": "Homeowners and hobbyists are exploring DIY solar panel installations for powering small devices, lighting, or even contributing to home energy. Tutorials, cost breakdowns, and efficiency tips are highly sought after."
+  }
+]
+```
+
+#### 3.2. Get topic from Springer Nature
+**GET** `/api/topic/springer-nature?keyword=`
+
+**Response:**
+```json
+[
+    {
+    "id": "doi:10.1007/s43621-025-01069-0",
+    "title": "Multi-model MCDM framework for sustainable renewable energy selection in India: integrating CRITIC-EDAS-CODAS-CoCoSo",
+    "url": "http://dx.doi.org/10.1007/s43621-025-01069-0",
+    "abstract": "A new framework identifies the most suitable renewable energy sources for India’s unique needs. Hydropower ranks highest, with solar and wind as strong alternatives for sustainable energy development. Study offers insights for policymakers on balancing efficiency, costs, and environmental impact in energy planning."
+  }
+]
+```
+
 
 ### 4. Inngest APIs
 
@@ -328,10 +383,10 @@ MIT
 ### 6. User
 
 #### 6.1. Update avatar
-**PUT** `/api/users/:id/avatar`
+**PATCH** `/api/users/:id/avatar`
 
 #### 6.2. Update profile (fullname)
-**PUT** `/api/users/:id/profile`
+**PATCH** `/api/users/:id/profile`
 ```json
 {
   "fullname": "Nguyen Tran Van Anh"
@@ -473,6 +528,40 @@ MIT
 **Response:** Thông tin user đã cập nhật.
 
 ---
+
+### 11. Upload video to Youtube
+
+#### 11.1. Link Youtube account
+
+**GET** `/api/youtube/auth`
+
+#### 11.2. Upload video
+
+**POST** `/api/youtube/upload`
+
+**Request**
+
+```json
+{
+  "account_id": "UCzFcpKj6EaN9WYo19L_UmYg",
+  "url": "https://res.cloudinary.com/dvar3w9dm/video/upload/v1748435432/jo3vjndxvxmlkoquy7zh.mp4",
+  "title": "Test upload to youtube",
+  "privacy_status": "public",
+  "description": "Today is 14/6/2025"
+}
+```
+
+**Response**
+
+```json
+{
+  "message": "Video uploaded successfully",
+  "video": {
+    "id": "nK75ROlZv8k",
+    "url": "https://www.youtube.com/watch?v=nK75ROlZv8k"
+  }
+}
+```
 
 ## Notes
 
