@@ -4,14 +4,18 @@ const url = require('url');
 const streamifier = require('streamifier');
 const SocialAccount = require('../models/social-accounts.m');
 
+const createOauth2Client = () => {
+    return new google.auth.OAuth2(
+        process.env.GOOGLE_CLIENT_ID,
+        process.env.GOOGLE_CLIENT_SECRET,
+        `${process.env.HOSTNAME}/api/youtube/auth/callback`
+    );
+}
+
 module.exports = {
     auth: async (req, res) => {
         try {
-            const oauth2Client = new google.auth.OAuth2(
-                process.env.GOOGLE_CLIENT_ID,
-                process.env.GOOGLE_CLIENT_SECRET,
-                `${process.env.HOSTNAME}/api/youtube/auth/callback`
-            );
+            const oauth2Client = createOauth2Client();
 
             const scopes = [
                 'https://www.googleapis.com/auth/youtube',
@@ -24,7 +28,7 @@ module.exports = {
                 scope: scopes,
                 include_granted_scopes: true,
                 prompt: 'consent',
-                state: req.user._id.toString()
+                state: req.user.id
             });
 
             res.redirect(authorizationUrl);
@@ -36,11 +40,7 @@ module.exports = {
 
     authCallback: async (req, res) => {
         try {
-            const oauth2Client = new google.auth.OAuth2(
-                process.env.GOOGLE_CLIENT_ID,
-                process.env.GOOGLE_CLIENT_SECRET,
-                `${process.env.HOSTNAME}/api/youtube/auth/callback`
-            );
+            const oauth2Client = createOauth2Client();
 
             let q = url.parse(req.url, true).query;
             const userId = q.state;
@@ -101,14 +101,15 @@ module.exports = {
 
     uploadVideo: async (req, res) => {
         try {
-            const oauth2Client = new google.auth.OAuth2(
-                process.env.GOOGLE_CLIENT_ID,
-                process.env.GOOGLE_CLIENT_SECRET,
-                `${process.env.HOSTNAME}/api/youtube/auth/callback`
-            );
+            const oauth2Client = createOauth2Client();
 
+            const accounts = await SocialAccount.find({
+                user_id: ObjectId.createFromHexString(req.user.id),
+                platform: 'youtube'
+            });
+            
             const account = await SocialAccount.findOne({
-                user_id: ObjectId.createFromHexString(req.user._id),
+                user_id: ObjectId.createFromHexString(req.user.id),
                 platform: 'youtube',
                 account_id: req.body.account_id
             });
@@ -143,7 +144,7 @@ module.exports = {
 
             await SocialAccount.findOneAndUpdate(
                 {
-                    user_id: ObjectId.createFromHexString(req.user._id),
+                    user_id: ObjectId.createFromHexString(req.user.id),
                     platform: 'youtube',
                     account_id: req.body.account_id
                 },
@@ -160,6 +161,61 @@ module.exports = {
                     id: uploadResponse.data.id,
                     url: `https://www.youtube.com/watch?v=${uploadResponse.data.id}`,
                 }
+            });
+        }
+        catch (error) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    },
+
+    getViewCount: async (req, res) => {
+        try {
+            const oauth2Client = createOauth2Client();
+
+            const account = await SocialAccount.findOne({
+                user_id: ObjectId.createFromHexString(req.user.id),
+                platform: 'youtube',
+                account_id: req.query.account_id
+            });
+            if (!account) {
+                return res.status(404).json({ message: 'YouTube account not found' });
+            }
+            oauth2Client.setCredentials(account.tokens);
+
+            const youtube = google.youtube({
+                version: 'v3',
+                auth: oauth2Client,
+            });
+            const response = await youtube.videos.list({
+                part: 'statistics',
+                id: account.videos.join(',')
+            });
+
+            const statistics = response.data.items.map(item => {
+                const stat = item.statistics;
+                return {
+                    id: item.id,
+                    view_count: parseInt(stat.viewCount) || 0,
+                    like_count: parseInt(stat.likeCount) || 0,
+                    dislike_count: parseInt(stat.dislikeCount) || 0,
+                    comment_count: parseInt(stat.commentCount) || 0
+                }
+            });
+
+            const totalViews = statistics.reduce((sum, stat) => sum + stat.view_count, 0);
+            const totalLikes = statistics.reduce((sum, stat) => sum + stat.like_count, 0);
+            const totalDislikes = statistics.reduce((sum, stat) => sum + stat.dislike_count, 0);
+            const totalComments = statistics.reduce((sum, stat) => sum + stat.comment_count, 0);
+
+            return res.status(200).json({
+                total_items: statistics.length,
+                total: {
+                    view_count: totalViews,
+                    like_count: totalLikes,
+                    dislike_count: totalDislikes,
+                    comment_count: totalComments
+                },
+                items: statistics
             });
         }
         catch (error) {
