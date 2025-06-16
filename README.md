@@ -551,6 +551,8 @@ MIT
 }
 ```
 
+privacy_status: public, private, or unlisted.
+
 **Response**
 
 ```json
@@ -560,6 +562,33 @@ MIT
     "id": "nK75ROlZv8k",
     "url": "https://www.youtube.com/watch?v=nK75ROlZv8k"
   }
+}
+```
+
+#### 11.3. Get statistic
+
+**GET** `/api/youtube/statistics?account_id=`
+
+**Response**
+
+```json
+{
+  "total_items": 1,
+  "total": {
+    "view_count": 0,
+    "like_count": 1,
+    "dislike_count": 0,
+    "comment_count": 0
+  },
+  "items": [
+    {
+      "id": "StYjPQvdvcw",
+      "view_count": 0,
+      "like_count": 1,
+      "dislike_count": 0,
+      "comment_count": 0
+    }
+  ]
 }
 ```
 
