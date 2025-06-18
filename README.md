@@ -592,6 +592,35 @@ privacy_status: public, private, or unlisted.
 }
 ```
 
+### 12. Get sample voices
+
+**GET** `/api/voices/sample`
+
+**Query parameters:**
+
+- page (optional)
+- per_page (optional)
+
+**Response**
+
+```json
+{
+  "total_items": 10,
+  "total_pages": 10,
+  "current_page": 1,
+  "per_page": 1,
+  "voices": [
+    {
+      "_id": "6852ce384c818334f86a74ef",
+      "name": "Arista-PlayAI",
+      "display_name": "Arista",
+      "url": "http://res.cloudinary.com/dvar3w9dm/video/upload/v1746806282/yl0rpkpoi8tfq7k4w9gv.mp3"
+    }
+  ]
+}
+```
+
+
 ## Notes
 
 - Một số API có thể yêu cầu xác thực hoặc truyền token, hãy kiểm tra lại cấu hình bảo mật nếu triển khai thực tế.
