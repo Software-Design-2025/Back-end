@@ -42,6 +42,8 @@ npx inngest-cli@latest dev
 
 ## API Documentation
 
+**All requests, except those related to authentication, must include the `Authorization: Bearer [access-token]` header.**
+
 ### 1. User APIs
 
 #### GET /routers/users/detail
