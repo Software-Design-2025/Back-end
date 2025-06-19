@@ -594,7 +594,9 @@ privacy_status: public, private, or unlisted.
 }
 ```
 
-### 12. Get sample voices
+### 12. Voice
+
+#### 12.1. Get sample voices
 
 **GET** `/api/voices/sample`
 
@@ -622,6 +624,25 @@ privacy_status: public, private, or unlisted.
 }
 ```
 
+#### 12.2. Text to speech
+
+**POST** `/api/voices`
+
+**Request**
+
+```json
+{
+  "voice": "Arista-PlayAI",
+  "text": "Hello, my name is Anna. Nice to meet you!"
+}
+```
+
+**Response**
+```json
+{
+  "url": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2Fabbc46d6-833b-45c6-90c8-34c7b7d2f7ab.mp3?alt=media&token=be356e83-480f-4f1b-a64e-0fd5d62c9b54"
+}
+```
 
 ## Notes
 
