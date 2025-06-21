@@ -42,6 +42,8 @@ npx inngest-cli@latest dev
 
 ## API Documentation
 
+**All requests, except those related to authentication, must include the `Authorization: Bearer [access-token]` header.**
+
 ### 1. User APIs
 
 #### GET /routers/users/detail
@@ -551,6 +553,8 @@ MIT
 }
 ```
 
+privacy_status: public, private, or unlisted.
+
 **Response**
 
 ```json
@@ -560,6 +564,83 @@ MIT
     "id": "nK75ROlZv8k",
     "url": "https://www.youtube.com/watch?v=nK75ROlZv8k"
   }
+}
+```
+
+#### 11.3. Get statistic
+
+**GET** `/api/youtube/statistics?account_id=`
+
+**Response**
+
+```json
+{
+  "total_items": 1,
+  "total": {
+    "view_count": 0,
+    "like_count": 1,
+    "dislike_count": 0,
+    "comment_count": 0
+  },
+  "items": [
+    {
+      "id": "StYjPQvdvcw",
+      "view_count": 0,
+      "like_count": 1,
+      "dislike_count": 0,
+      "comment_count": 0
+    }
+  ]
+}
+```
+
+### 12. Voice
+
+#### 12.1. Get sample voices
+
+**GET** `/api/voices/sample`
+
+**Query parameters:**
+
+- page (optional)
+- per_page (optional)
+
+**Response**
+
+```json
+{
+  "total_items": 10,
+  "total_pages": 10,
+  "current_page": 1,
+  "per_page": 1,
+  "voices": [
+    {
+      "_id": "6852ce384c818334f86a74ef",
+      "name": "Arista-PlayAI",
+      "display_name": "Arista",
+      "url": "http://res.cloudinary.com/dvar3w9dm/video/upload/v1746806282/yl0rpkpoi8tfq7k4w9gv.mp3"
+    }
+  ]
+}
+```
+
+#### 12.2. Text to speech
+
+**POST** `/api/voices`
+
+**Request**
+
+```json
+{
+  "voice": "Arista-PlayAI",
+  "text": "Hello, my name is Anna. Nice to meet you!"
+}
+```
+
+**Response**
+```json
+{
+  "url": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2Fabbc46d6-833b-45c6-90c8-34c7b7d2f7ab.mp3?alt=media&token=be356e83-480f-4f1b-a64e-0fd5d62c9b54"
 }
 ```
 

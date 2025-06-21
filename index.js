@@ -20,6 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', require('./routers/auth.r'));
+
+app.use(require('./middlewares/verify.mw'));
 app.use('/api/voices', require('./routers/voices.r'));
 app.use('/api/topics', require('./routers/topics.r'));
 app.use('/api/users', require('./routers/users.r'));
@@ -60,6 +62,7 @@ connectDB().then(() => {
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
         testRenderPromoVideo();
+        // testSaveLinkVideo(); 
     });
 }).catch(err => {
     console.error('Failed to connect to MongoDB:', err);

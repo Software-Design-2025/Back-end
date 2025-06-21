@@ -1,22 +1,36 @@
-const connectDB = require("../config/db.config");
+const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path');
 
-module.exports = {
-    find: async (page = 1, per_page = 5) => {
-        const db = await connectDB();
-        const collection = db.collection("voices");
-        const [voices, total] = await Promise.all([
-            collection
-                .find({})
-                .skip((page - 1) * per_page)
-                .limit(per_page)
-                .toArray(),
-            collection.countDocuments()
-        ]);
-        return {
-            page: page,
-            total_pages: Math.ceil(total / per_page),
-            per_page: per_page,
-            voices: voices
-        };
+const VoicesSchema = new mongoose.Schema({
+    name: { 
+        type: String, 
+        required: true 
+    },
+    display_name: { 
+        type: String, 
+        required: true 
+    },
+    url: { 
+        type: String,
+        required: true 
+    }
+}, { versionKey: false });
+
+const Voices = mongoose.models.voices || mongoose.model('voices', VoicesSchema);
+module.exports = Voices
+
+async function initCollection() {
+    try {
+        let voices = await Voices.find();
+        if (voices.length === 0) {
+            const voicesData = JSON.parse(fs.readFileSync(path.join(__dirname, '../_data/voices.json'), 'utf8')); 
+            voices = await Voices.insertMany(voicesData);
+        }
+    }
+    catch (error) {
+        console.error('MongoDB connection error:', error);
     }
 }
+
+initCollection();
