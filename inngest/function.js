@@ -94,7 +94,7 @@ const RenderCloudVideo = inngest.createFunction(
                 musicName = nameMap[musicName.toLowerCase()] || musicName;
                 try {
                     const res = await fetch(
-                        `${process.env.INTERNAL_API_ORIGIN || "http://localhost:3000"}/api/get-audio-link?name=${encodeURIComponent(musicName)}`
+                        `${process.env.INTERNAL_API_ORIGIN || "http://localhost:5000"}/api/audio/link?name=${encodeURIComponent(musicName)}`
                     );
                     if (res.ok) {
                         const data = await res.json();
@@ -145,7 +145,7 @@ const RenderCloudVideo = inngest.createFunction(
 
                 if (result?.type === 'success') {
                     await axios.post(
-                        `${process.env.INTERNAL_API_ORIGIN || "http://localhost:3000"}/api/save-link-video`,
+                        `${process.env.INTERNAL_API_ORIGIN || "http://localhost:5000"}/api/video/save-link-video`,
                         {
                             videoId,
                             videoOutputUrl: result.publicUrl

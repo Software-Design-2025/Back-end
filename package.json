@@ -10,7 +10,8 @@
   "dependencies": {
     "@google-cloud/text-to-speech": "^6.1.0",
     "@google/genai": "^0.14.1",
-    "@remotion/cloudrun": "^4.0.314",
+    "@remotion/cli": "^4.0.311",
+    "@remotion/cloudrun": "^4.0.311",
     "@remotion/google-fonts": "^4.0.314",
     "assemblyai": "^4.12.2",
     "axios": "^1.9.0",
@@ -33,7 +34,7 @@
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
-    "remotion": "^4.0.314",
+    "remotion": "^4.0.311",
     "replicate": "^1.0.1",
     "request": "^2.88.2",
     "streamifier": "^0.1.1",

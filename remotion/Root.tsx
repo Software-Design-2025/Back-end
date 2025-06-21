@@ -34,14 +34,13 @@ const RemotionRoot = () => {
         width: 600,
         height: 340,
       }}
-      calculateMetadata={async ({ props }: { props: { captions: Caption[]; width: number; height: number } }) => {
-        const { captions, width, height } = props;
+      calculateMetadata={async ({ props }: { props: Record<string, unknown> }) => {
+        const captions = Array.isArray(props.captions) ? (props.captions as Caption[]) : [];
+        const width = typeof props.width === 'number' ? props.width : 600;
+        const height = typeof props.height === 'number' ? props.height : 340;
 
-        let safeWidth = typeof width === 'number' ? width : 600;
-        let safeHeight = typeof height === 'number' ? height : 340;
-
-        if (!Array.isArray(captions) || captions.length === 0) {
-          return { durationInFrames: 60, width: safeWidth, height: safeHeight };
+        if (captions.length === 0) {
+          return { durationInFrames: 60, width, height };
         }
 
         let lastEnd = captions[captions.length - 1]?.end || 2000;
@@ -52,7 +51,7 @@ const RemotionRoot = () => {
         const fps = 30;
         const durationInFrames = Math.round((lastEnd / 1000) * fps);
 
-        return { durationInFrames, width: safeWidth, height: safeHeight };
+        return { durationInFrames, width, height };
       }}
     />
   );

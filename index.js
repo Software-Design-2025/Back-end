@@ -6,6 +6,7 @@ require('dotenv').config();
 require('./config/passport.config');
 const corsOptions = require('./config/cors.config'); 
 const connectDB = require('./config/db.config');
+const inngestHandler = require('./config/inngest.config');
 
 const app = express();
 
@@ -30,35 +31,35 @@ app.use('/api/youtube', require('./routers/youtube.r'));
 app.use('/routers/video', require('./routers/video.r'));
 app.use('/routers/users', require('./routers/users.r'));
 app.use('/routers/audio', require('./routers/audio.r'));
-app.use('/routers/inngest', require('./routers/inngest.r'));
 app.use('/routers/users', require('./routers/users.r'));
+app.use('/inngest/server', inngestHandler);
 
 const PORT = process.env.SERVER_PORT || 3000;
 
 const fetch = require('node-fetch');
-const testSaveLinkVideo = async () => {
-    const body = {
-        videoId: '683045d5c6ffb4d2be16a9b1', 
-        videoOutputUrl: 'https://storage.googleapis.com/remotioncloudrun-mwujx71aip/renders%2Fd3w28qovxg%2Fout.mp4'
-    };
 
+const testRenderPromoVideo = async () => {
+    const body = {
+        videoId: 'test-video-id',
+        videoData: { foo: 'bar' }
+    };
     try {
-        const res = await fetch('http://localhost:5000/routers/video/save-link', { 
+        const res = await fetch('http://localhost:5000/api/inngest/render-promo-video', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
         });
         const data = await res.json();
-        console.log('Test save-link-video:', data);
+        console.log('Test render-promo-video:', data);
     } catch (err) {
-        console.error('Test save-link-video error:', err);
+        console.error('Test render-promo-video error:', err);
     }
 };
 
 connectDB().then(() => {
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
-        testSaveLinkVideo(); 
+        testRenderPromoVideo();
     });
 }).catch(err => {
     console.error('Failed to connect to MongoDB:', err);

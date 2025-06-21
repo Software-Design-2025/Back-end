@@ -11,7 +11,7 @@ router.get('/by-creator', videoController.getVideosByCreatedBy);
 router.get('/public', videoController.getPublicVideos);
 router.patch('/public-status', videoController.updateVideoPublicStatus);
 router.post('/save-edit', videoController.saveVideoEditConfig);
-router.post('/save-link', videoController.saveLinkVideo);
+router.post('/save-link-video', videoController.saveLinkVideo);
 
 // Caption & Image
 router.post('/generate-caption', require('../controllers/captionController.c').generateCaption);

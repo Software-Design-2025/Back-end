@@ -80,8 +80,8 @@ function RemotionComposition({
     const imgAnimationDuration = 1200;
     const textAnimationDuration = 500;
 
-    const getMusicUrl = (musicName) => {
-        if (!musicName) return null;
+    const getMusicUrl = (musicName: string | null | undefined): string | undefined => {
+        if (!musicName) return undefined;
         return `/${musicName.toLowerCase().replace(/\s+/g, '')}.mp3`;
     };
 
@@ -165,7 +165,7 @@ function RemotionComposition({
 
             {musicFile && (
                 <Audio
-                    src={musicFile.startsWith("http") ? musicFile : getMusicUrl(musicFile)}
+                    src={musicFile.startsWith("http") ? musicFile : getMusicUrl(musicFile) ?? undefined}
                     startFrom={0}
                     volume={0.5}
                 />

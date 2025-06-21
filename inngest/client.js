@@ -1,4 +1,4 @@
-const { Inngest } = require("inngest");
+const { Inngest } = require('inngest');
 
 const inngest = new Inngest({ id: "Generate-promo-video" });
 
