@@ -20,6 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', require('./routers/auth.r'));
+app.use('/inngest/server', inngestHandler);
+app.use('/api/inngest', require('./routers/inngest.r'));
 
 app.use(require('./middlewares/verify.mw'));
 app.use('/api/voices', require('./routers/voices.r'));
@@ -27,14 +29,12 @@ app.use('/api/topics', require('./routers/topics.r'));
 app.use('/api/users', require('./routers/users.r'));
 app.use('/api/video', require('./routers/video.r'));
 app.use('/api/audio', require('./routers/audio.r'));
-app.use('/api/inngest', require('./routers/inngest.r'));
 app.use('/api/youtube', require('./routers/youtube.r'));
 
 app.use('/routers/video', require('./routers/video.r'));
 app.use('/routers/users', require('./routers/users.r'));
 app.use('/routers/audio', require('./routers/audio.r'));
 app.use('/routers/users', require('./routers/users.r'));
-app.use('/inngest/server', inngestHandler);
 
 const PORT = process.env.SERVER_PORT || 3000;
 
