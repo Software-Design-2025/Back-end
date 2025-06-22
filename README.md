@@ -114,8 +114,35 @@ Sinh script video AI (nếu có).
 #### GET /routers/video/by-creator?id=USER_ID
 Lấy danh sách video theo user.
 
-#### GET /routers/video/public
-Lấy danh sách video public.
+#### GET /api/video/public
+
+**Query params**
+- page (optional, default = 1)
+- limit (optional, default = 10)
+
+**Response**
+
+```json
+{
+  "page": 2,
+  "per_page": 1,
+  "total_items": 2,
+  "total_pages": 2,
+  "videos": [
+    {
+      "_id": "685664c24d8cdbb0c46d6b73",
+      "videoOutputUrl": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      "creator": {
+        "_id": "685575ca9451adddc5d9f6c7",
+        "fullname": "Pham Gia Khang",
+        "username": "khang080704",
+        "avatar": "https://i.pinimg.com/736x/2a/53/70/2a5370c752b7f4bd65766f3550afdb5d.jpg"
+      },
+      "thumbnail": "https://i.pinimg.com/736x/32/25/aa/3225aa0ab22fa4fdcfd5ec7b71c12e44.jpg"
+    }
+  ]
+}
+```
 
 #### PATCH /routers/video/public-status
 Cập nhật trạng thái public cho video.
@@ -279,13 +306,6 @@ Trigger Inngest function render/promo-video.
 ## License
 
 MIT
-                "fullname": "Nguyen Van Anh",
-                "avatar": "$url"
-            }
-        }
-    ]
-}
-```
 
 #### 4.3. Save Video Data
 **POST** `/routers/save-video-data`
