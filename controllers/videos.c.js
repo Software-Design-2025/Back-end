@@ -63,11 +63,53 @@ async function getVideosByCreatedBy(req, res) {
 
 async function getPublicVideos(req, res) {
     try {
-        await connectDB();
-        const videos = await VideoData.find({ public: true });
-        res.json(videos);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const videos = await VideoData.aggregate([
+            { $match: { public: true } },
+            {
+                $addFields: {
+                    createdByObjectId: { $toObjectId: '$createdBy' }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'createdByObjectId',
+                    foreignField: '_id',
+                    as: 'creator'
+                }
+            },
+            {
+                $unwind: '$creator'
+            },
+            {
+                $project: {
+                    _id: 1,
+                    'creator._id': 1,
+                    'creator.username': 1,
+                    'creator.fullname': 1,
+                    'creator.avatar': 1,
+                    videoOutputUrl: 1,
+                    thumbnail: { $arrayElemAt: ['$imageList', 0] }
+                }
+            },
+            { $skip: skip },
+            { $limit: limit }
+        ])
+        const total = await VideoData.countDocuments({ public: true });
+        
+        return res.status(200).json({
+            page: page,
+            per_page: limit,
+            total_items: total,
+            total_pages: Math.ceil(total / limit),
+            videos: videos
+        });
     } catch (err) {
-        res.status(500).json({ error: "Server error", details: err.message });
+        return res.status(500).json({ error: "Server error", details: err.message });
     }
 }
 
