@@ -72,6 +72,7 @@ module.exports = {
                 }
 
                 const channel = channelsListResponse.data.items[0];
+                console.log(channel.snippet.thumbnails.default.url)
                 const account = await SocialAccount.findOneAndUpdate(
                     {
                         user_id: ObjectId.createFromHexString(userId),
@@ -81,6 +82,7 @@ module.exports = {
                     {
                         $set: {
                             username: channel.snippet.title,
+                            avatar: channel.snippet.thumbnails.default.url,
                             tokens: {
                                 access_token: tokens.access_token,
                                 refresh_token: tokens.refresh_token
@@ -103,11 +105,6 @@ module.exports = {
     uploadVideo: async (req, res) => {
         try {
             const oauth2Client = createOauth2Client();
-
-            const accounts = await SocialAccount.find({
-                user_id: ObjectId.createFromHexString(req.user.id),
-                platform: 'youtube'
-            });
             
             const account = await SocialAccount.findOne({
                 user_id: ObjectId.createFromHexString(req.user.id),
@@ -220,6 +217,28 @@ module.exports = {
             });
         }
         catch (error) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    },
+
+    getAccounts: async (req, res) => {
+        try {
+            let accounts = await SocialAccount.find({
+                user_id: ObjectId.createFromHexString(req.user.id),
+                platform: 'youtube'
+            });
+
+            accounts = accounts.map(account => ({
+                id: account._id,
+                username: account.username,
+                avatar: account.avatar
+            }));
+
+            return res.status(200).json({
+                total_accounts: accounts.length,
+                accounts: accounts
+            });
+        } catch (error) {
             return res.status(500).json({ message: "Internal server error" });
         }
     }
