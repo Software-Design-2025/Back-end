@@ -28,7 +28,10 @@ module.exports = {
                 scope: scopes,
                 include_granted_scopes: true,
                 prompt: 'consent',
-                state: req.user.id
+                state: encodeURIComponent(JSON.stringify({
+                    userId: req.user.id,
+                    redirectUrl: req.query.redirect_url
+                }))
             });
 
             res.redirect(authorizationUrl);
@@ -43,7 +46,7 @@ module.exports = {
             const oauth2Client = createOauth2Client();
 
             let q = url.parse(req.url, true).query;
-            const userId = q.state;
+            const { userId, redirectUrl } = JSON.parse(decodeURIComponent(q.state || '{}'));
 
             if (q.error) {
                 throw new Error(q.error_description || 'YouTube authentication failed');
@@ -90,9 +93,7 @@ module.exports = {
                     }
                 );
 
-                return res.status(200).json({
-                    message: 'YouTube account linked successfully'
-                });
+                res.redirect(redirectUrl);
             }
         } catch (error) {
             return res.status(500).json({ message: "Internal server error" });
