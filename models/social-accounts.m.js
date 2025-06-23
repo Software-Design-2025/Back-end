@@ -34,7 +34,8 @@ const socialAccountSchema = new mongoose.Schema({
         type: tokensSchema,
         required: true
     },
-    videos: [String]
+    videos: [String],
+    avatar: String
 });
 
 module.exports = mongoose.models.social_accounts || mongoose.model('social_accounts', socialAccountSchema);
