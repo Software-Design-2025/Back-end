@@ -614,6 +614,25 @@ privacy_status: public, private, or unlisted.
 }
 ```
 
+#### 11.4. Get Youtube accounts
+
+**GET** `/api/youtube/accounts`
+
+**Response**
+
+```json
+{
+  "total_accounts": 1,
+  "accounts": [
+    {
+      "id": "6850308ed9296b5728826f02",
+      "username": "...",
+      "avatar": "..."
+    }
+  ]
+}
+```
+
 ### 12. Voice
 
 #### 12.1. Get sample voices

@@ -5,5 +5,6 @@ router.get('/auth', youtubeC.auth);
 router.get('/auth/callback', youtubeC.authCallback);
 router.post('/upload', youtubeC.uploadVideo);
 router.get('/statistics', youtubeC.getViewCount);
+router.get('/accounts', youtubeC.getAccounts);
 
 module.exports = router;
