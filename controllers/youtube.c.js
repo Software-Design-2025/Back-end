@@ -72,7 +72,6 @@ module.exports = {
                 }
 
                 const channel = channelsListResponse.data.items[0];
-                console.log(channel.snippet.thumbnails.default.url)
                 const account = await SocialAccount.findOneAndUpdate(
                     {
                         user_id: ObjectId.createFromHexString(userId),
