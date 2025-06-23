@@ -555,7 +555,7 @@ MIT
 
 #### 11.1. Link Youtube account
 
-**GET** `/api/youtube/auth`
+**GET** `/api/youtube/auth?redirect_url=`
 
 #### 11.2. Upload video
 
