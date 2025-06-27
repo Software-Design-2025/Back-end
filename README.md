@@ -635,35 +635,7 @@ privacy_status: public, private, or unlisted.
 
 ### 12. Voice
 
-#### 12.1. Get sample voices
-
-**GET** `/api/voices/sample`
-
-**Query parameters:**
-
-- page (optional)
-- per_page (optional)
-
-**Response**
-
-```json
-{
-  "total_items": 10,
-  "total_pages": 10,
-  "current_page": 1,
-  "per_page": 1,
-  "voices": [
-    {
-      "_id": "6852ce384c818334f86a74ef",
-      "name": "Arista-PlayAI",
-      "display_name": "Arista",
-      "url": "http://res.cloudinary.com/dvar3w9dm/video/upload/v1746806282/yl0rpkpoi8tfq7k4w9gv.mp3"
-    }
-  ]
-}
-```
-
-#### 12.2. Text to speech
+#### 12.1. Text to speech
 
 **POST** `/api/voices`
 
@@ -681,6 +653,39 @@ privacy_status: public, private, or unlisted.
 {
   "url": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2Fabbc46d6-833b-45c6-90c8-34c7b7d2f7ab.mp3?alt=media&token=be356e83-480f-4f1b-a64e-0fd5d62c9b54"
 }
+```
+
+### 13. System assets
+
+## 13.1. Get sample voices
+
+**GET** `/api/assets/voices`
+
+**Response**
+
+```json
+[
+  {
+    "name": "Arista-PlayAI",
+    "display_name": "Arista",
+    "url": "http://res.cloudinary.com/dvar3w9dm/video/upload/v1746806282/yl0rpkpoi8tfq7k4w9gv.mp3"
+  }
+]
+```
+
+## 13.1. Get sounds
+
+**GET** `/api/assets/sounds`
+
+**Response**
+
+```json
+[
+  {
+    "display_name": "Moonlight",
+    "url": "https://res.cloudinary.com/dvar3w9dm/video/upload/v1751033565/scott-buckley-moonlight_chosic.com_vrn3sy.mp3"
+  }
+]
 ```
 
 ## Notes
