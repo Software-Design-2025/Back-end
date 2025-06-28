@@ -288,5 +288,40 @@ module.exports = {
             console.error("Error fetching uploaded videos:", error);
             return res.status(500).json({ message: "Internal server error" });
         }
+    },
+
+    getTopViewVideos: async (req, res) => {
+        try {
+            const oauth2Client = createOauth2Client();
+            const account = await SocialAccount.findOne({
+                user_id: ObjectId.createFromHexString(req.user.id),
+                platform: 'youtube',
+                account_id: req.query.account_id
+            });
+            if (!account) {
+                return res.status(404).json({ message: 'YouTube account not found' });
+            }
+            oauth2Client.setCredentials(account.tokens);
+            const youtube = google.youtube({
+                version: 'v3',
+                auth: oauth2Client,
+            });
+            const videoIds = account.videos.map(video => video.id);
+            const response = await youtube.videos.list({
+                part: 'id,snippet,statistics',
+                id: videoIds.join(',')
+            });
+            const videos = response.data.items.map(item => ({
+                id: item.id,
+                title: item.snippet.title,
+                view_count: parseInt(item.statistics.viewCount) || 0
+            }));
+            videos.sort((a, b) => b.view_count - a.view_count);
+            return res.status(200).json(videos.slice(0, 10)); 
+        }
+        catch (error) {
+            console.error("Error fetching top view videos:", error);
+            return res.status(500).json({ message: "Internal server error" });
+        }
     }
 }
