@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const path = require('path');
 const passport = require('passport');
 require('dotenv').config();
 require('./config/passport.config');
@@ -13,7 +14,6 @@ const app = express();
 app.use(passport.initialize());
 require('dotenv').config();
 
-// Middleware
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
@@ -30,6 +30,8 @@ app.use('/api/users', require('./routers/users.r'));
 app.use('/api/video', require('./routers/video.r'));
 app.use('/api/audio', require('./routers/audio.r'));
 app.use('/api/youtube', require('./routers/youtube.r'));
+app.use('/api/assets', require('./routers/assets.r'));
+app.use('/api/v2/videos', require('./routers/videos.v2'));
 
 app.use('/routers/video', require('./routers/video.r'));
 app.use('/routers/users', require('./routers/users.r'));
@@ -61,7 +63,7 @@ const testRenderPromoVideo = async () => {
 connectDB().then(() => {
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
-        testRenderPromoVideo();
+        // testRenderPromoVideo();
         // testSaveLinkVideo(); 
     });
 }).catch(err => {
