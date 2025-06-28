@@ -657,7 +657,7 @@ privacy_status: public, private, or unlisted.
 
 ### 13. System assets
 
-## 13.1. Get sample voices
+#### 13.1. Get sample voices
 
 **GET** `/api/assets/voices`
 
@@ -673,7 +673,7 @@ privacy_status: public, private, or unlisted.
 ]
 ```
 
-## 13.1. Get sounds
+#### 13.1. Get sounds
 
 **GET** `/api/assets/sounds`
 
@@ -686,6 +686,83 @@ privacy_status: public, private, or unlisted.
     "url": "https://res.cloudinary.com/dvar3w9dm/video/upload/v1751033565/scott-buckley-moonlight_chosic.com_vrn3sy.mp3"
   }
 ]
+```
+
+### 14. Create video using ffmpeg
+
+**POST** `/api/v2/videos`
+
+**Request**
+
+```json
+{
+  "size": "1920x1080",
+  "transition": "distance",
+  "scenes": [
+    {
+      "image": "https://th.bing.com/th/id/OIP.MV-msxuUW_VXG0asK_76CAHaEK?w=1000&h=563&rs=1&pid=ImgDetMain&cb=idpwebpc2",
+      "audio": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2Fb54876bb-ab77-4415-a661-7b67de2dbdc8.mp3?alt=media&token=2964aef3-f726-4b20-89e6-df38fcdfbaca"
+    },
+    {
+      "image": "https://th.bing.com/th/id/R.971afe8a08f326aba9563206adcf5296?rik=cfb%2fRYdxG7KJEQ&pid=ImgRaw&r=0",
+      "audio": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2Fd5000919-3baa-45c7-aa5f-b74b31f7e66d.mp3?alt=media&token=9074c787-b18b-4eb3-a334-14f127702ec1"
+    },
+    {
+      "image": "https://th.bing.com/th/id/OIP.txldTbuSDw2UQJ04WWIMfwHaEK?rs=1&pid=ImgDetMain&cb=idpwebpc2",
+      "audio": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2Fd7f12902-8987-4274-bc2a-107fa16a4ef9.mp3?alt=media&token=d29aa3a5-e7af-49d7-a2e6-2c8640fe5675"
+    },
+    {
+      "image": "https://th.bing.com/th/id/OIP.KoPuCOXP64K00WBr8xEr6gHaEK?rs=1&pid=ImgDetMain&cb=idpwebpc2",
+      "audio": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2F2f2b2e88-5dca-4a22-97ad-66ca3e24456f.mp3?alt=media&token=96ec2c6b-a82d-4741-9a3b-af63cee6f8d7"
+    },
+    {
+      "image": "https://th.bing.com/th/id/OIP.uNNn8s0ih-ztuEiAyjgiFgHaEK?rs=1&pid=ImgDetMain&cb=idpwebpc2",
+      "audio": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2F25bc6234-853c-41e6-8598-0e151d84294d.mp3?alt=media&token=5a5b8072-9e61-404e-92e9-8ead93110fc9"
+    }
+  ]
+}
+```
+
+| Tên hiệu ứng          | Mô tả chuyển động                                 |
+| --------------------- | ------------------------------------------------- |
+| `fade`                | Mờ dần video cũ và hiện dần video mới             |
+| `wipeleft`            | Gạt từ phải sang trái                             |
+| `wiperight`           | Gạt từ trái sang phải                             |
+| `wipeup`              | Gạt từ dưới lên trên                              |
+| `wipedown`            | Gạt từ trên xuống dưới                            |
+| `slideleft`           | Trượt từ phải sang trái                           |
+| `slideright`          | Trượt từ trái sang phải                           |
+| `slideup`             | Trượt từ dưới lên trên                            |
+| `slidedown`           | Trượt từ trên xuống dưới                          |
+| `circlecrop`          | Video mới xuất hiện dần theo vòng tròn            |
+| `rectcrop`            | Video mới xuất hiện theo hình chữ nhật            |
+| `distance`            | Hiệu ứng phóng to video mới                       |
+| `fadeblack`           | Mờ dần sang màu đen rồi hiện video mới            |
+| `fadewhite`           | Mờ dần sang màu trắng rồi hiện video mới          |
+| `radial`              | Làm mờ dần theo kiểu hình tròn                    |
+| `smoothleft`          | Trượt mượt sang trái                              |
+| `smoothright`         | Trượt mượt sang phải                              |
+| `smoothup`            | Trượt mượt lên trên                               |
+| `smoothdown`          | Trượt mượt xuống dưới                             |
+| `circleopen`          | Vòng tròn mở dần ra để hiện video mới             |
+| `circleclose`         | Vòng tròn khép lại chuyển sang video mới          |
+| `vertopen`            | Hai mép dọc mở ra để hiện video mới               |
+| `vertclose`           | Hai mép dọc khép lại chuyển video                 |
+| `horzopen`            | Hai mép ngang mở ra để hiện video mới             |
+| `horzclose`           | Hai mép ngang khép lại chuyển video               |
+| `dissolve`            | Các pixel dần biến mất và hiện video mới (random) |
+| `pixelize`            | Pixel hóa rồi rõ dần video mới                    |
+| `diagtl`, `diagtr`    | Gạt chéo từ trái trên/phải trên                   |
+| `diagbl`, `diagbr`    | Gạt chéo từ trái dưới/phải dưới                   |
+| `hlslice` / `hrslice` | Cắt ngang từ trái/phải từng phần                  |
+| `vuslice` / `vdslice` | Cắt dọc từ trên/dưới từng phần                    |
+
+
+**Response**
+```json
+{
+  "url": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Fc9291544-fd19-45c3-88b6-5a1516559808.mp4?alt=media&token=7b5b5703-dbe7-4309-aa95-e0c4a6415d69"
+}
 ```
 
 ## Notes
