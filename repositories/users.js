@@ -28,8 +28,23 @@ async function getCreatedVideos(userId) {
     }
 }
 
+async function getFavoriteVideos(userId) {
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return user.favorite_videos;
+    }
+    catch (error) {
+        console.error('Error retrieving favorite videos:', error);
+        throw error;
+    }
+}
+
 
 module.exports = {
     insertCreatedVideo,
-    getCreatedVideos
+    getCreatedVideos,
+    getFavoriteVideos
 };

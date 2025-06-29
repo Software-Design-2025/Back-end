@@ -22,7 +22,8 @@ const {
 } = require('../repositories/videos');
 const {
     insertCreatedVideo,
-    getCreatedVideos
+    getCreatedVideos,
+    getFavoriteVideos
 } = require('../repositories/users');
 
 const EXTENSIONS = {
@@ -320,12 +321,27 @@ async function getCreatedVideosController(req, res) {
     }
     catch (err) {
         console.error('Error retrieving videos:', err);
-        return res.status(500).json({ error: "Server error", details: err.message });
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+async function getFavoriteVideosController(req, res) {
+    try {
+        const videoIDs = await getFavoriteVideos(req.user.id);  
+        const videos = await getVideos(videoIDs);
+        return res.status(200).json({
+            data: videos
+        });
+    }
+    catch (err) {
+        console.error('Error retrieving favorite videos:', err);
+        return res.status(500).json({ error: "Internal server error" });
     }
 }
 
 module.exports = {
     insertVideoController,
     createVideoController,
-    getCreatedVideosController
+    getCreatedVideosController,
+    getFavoriteVideosController
 };
