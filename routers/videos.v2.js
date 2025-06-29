@@ -3,6 +3,6 @@ const {
     createVideoController 
 } = require('../controllers/videos.v2');
 
-router.post('/', createVideoController);
+router.post('/generate', createVideoController);
 
 module.exports = router;

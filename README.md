@@ -728,7 +728,7 @@ privacy_status: public, private, or unlisted.
 
 ### 14. Create video using ffmpeg
 
-**POST** `/api/v2/videos`
+**POST** `/api/v2/videos/generate`
 
 **Request**
 
