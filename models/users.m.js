@@ -17,7 +17,11 @@ const usersSchema = new mongoose.Schema({
         type: String,
         enum: ['google', 'facebook', 'local'],
         default: 'local'
-    }
+    },
+    created_videos: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'videos'
+    }]
 });
 
 module.exports = mongoose.models.users || mongoose.model('users', usersSchema);

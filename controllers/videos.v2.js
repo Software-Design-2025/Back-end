@@ -4,17 +4,24 @@ const ffmpeg = require('fluent-ffmpeg');
 const {
     v4: uuidv4
 } = require('uuid');
-const {
-    transcribe
-} = require('../helpers/ai-services.h');
-const { 
-    storage 
-} = require('../config/FirebaseConfigs.config');
 const { 
     ref, 
     getDownloadURL,
     uploadBytes 
 } = require('firebase/storage');
+
+const { 
+    storage 
+} = require('../config/FirebaseConfigs.config');
+const {
+    transcribe
+} = require('../helpers/ai-services.h');
+const {
+    insertVideo
+} = require('../repositories/videos');
+const {
+    insertCreatedVideo
+} = require('../repositories/users');
 
 const EXTENSIONS = {
     'image/jpeg': '.jpg',
@@ -283,6 +290,20 @@ async function createVideoController(req, res) {
     }
 }
 
+async function insertVideoController(req, res) {
+    try {
+        const { scenes } = req.body;
+        const video = await insertVideo(scenes);
+        await insertCreatedVideo(req.user.id, video._id);
+        return res.status(201).json(video);
+    }
+    catch (error) {
+        console.error('Error inserting video:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
+    insertVideoController,
     createVideoController
 };
