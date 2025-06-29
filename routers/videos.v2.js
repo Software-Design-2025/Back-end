@@ -8,8 +8,6 @@ const {
 } = require('../controllers/audios.c');
 
 
-router.post('/', createAudiosController, insertVideoController)
-
-router.post('/generate', createVideoController);
+router.post('/', createAudiosController, createVideoController, insertVideoController)
 
 module.exports = router;
