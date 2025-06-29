@@ -17,10 +17,16 @@ const {
     transcribe
 } = require('../helpers/ai-services.h');
 const {
-    insertVideo
+    insertVideo,
+    getVideos,
+    getPublicVideos,
+    setPublicVideo,
+    deleteVideo
 } = require('../repositories/videos');
 const {
-    insertCreatedVideo
+    insertCreatedVideo,
+    getCreatedVideos,
+    getFavoriteVideos
 } = require('../repositories/users');
 
 const EXTENSIONS = {
@@ -308,7 +314,80 @@ async function insertVideoController(req, res) {
     }
 }
 
+async function getCreatedVideosController(req, res) {
+    try {
+        const videoIDs = await getCreatedVideos(req.user.id); 
+        const videos = await getVideos(videoIDs);
+        return res.status(200).json({
+            data: videos
+        });
+    }
+    catch (err) {
+        console.error('Error retrieving videos:', err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+async function getFavoriteVideosController(req, res) {
+    try {
+        const videoIDs = await getFavoriteVideos(req.user.id);  
+        const videos = await getVideos(videoIDs);
+        return res.status(200).json({
+            data: videos
+        });
+    }
+    catch (err) {
+        console.error('Error retrieving favorite videos:', err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+async function getPublicVideosController(req, res) {
+    try {
+        const videos = await getPublicVideos();
+        return res.status(200).json({
+            data: videos
+        });
+    }
+    catch (err) {
+        console.error('Error retrieving public videos:', err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+async function setPublicVideoController(req, res) {
+    try {
+        const { id, is_public } = req.body;
+        const result = await setPublicVideo(id, is_public);
+        return res.status(200).json({
+            message: 'Updated video visibility successfully'
+        });
+    } catch (error) {
+        console.error('Error updating video visibility:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+async function deleteVideoController(req, res) {
+    try {
+        const videoId = req.params.id;
+        const result = await deleteVideo(videoId);
+        return res.status(200).json({
+            message: 'Video deleted successfully'
+        });
+    }
+    catch (error) {
+        console.error('Error deleting video:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     insertVideoController,
-    createVideoController
+    createVideoController,
+    getCreatedVideosController,
+    getFavoriteVideosController,
+    getPublicVideosController,
+    setPublicVideoController,
+    deleteVideoController
 };

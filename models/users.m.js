@@ -21,6 +21,10 @@ const usersSchema = new mongoose.Schema({
     created_videos: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'videos'
+    }],
+    favorite_videos: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'videos'
     }]
 });
 
