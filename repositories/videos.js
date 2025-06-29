@@ -129,8 +129,23 @@ async function getPublicVideos() {
     }     
 }
 
+async function setPublicVideo(videoId, isPublic) {
+    try {
+        const result = await Video.updateOne(
+            { _id: videoId },
+            { $set: { is_public: isPublic } }
+        );
+        return result;
+    }
+    catch (error) {
+        console.error('Error updating video visibility:', error);
+        throw error;
+    }
+}
+
 module.exports = {
     insertVideo,
     getVideos,
-    getPublicVideos
+    getPublicVideos,
+    setPublicVideo
 };

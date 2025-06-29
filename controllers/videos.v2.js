@@ -19,7 +19,8 @@ const {
 const {
     insertVideo,
     getVideos,
-    getPublicVideos
+    getPublicVideos,
+    setPublicVideo
 } = require('../repositories/videos');
 const {
     insertCreatedVideo,
@@ -353,10 +354,24 @@ async function getPublicVideosController(req, res) {
     }
 }
 
+async function setPublicVideoController(req, res) {
+    try {
+        const { id, is_public } = req.body;
+        const result = await setPublicVideo(id, is_public);
+        return res.status(200).json({
+            message: 'Updated video visibility successfully'
+        });
+    } catch (error) {
+        console.error('Error updating video visibility:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     insertVideoController,
     createVideoController,
     getCreatedVideosController,
     getFavoriteVideosController,
-    getPublicVideosController
+    getPublicVideosController,
+    setPublicVideoController
 };

@@ -860,6 +860,17 @@ privacy_status: public, private, or unlisted.
 }
 ```
 
+#### 14.5. Set video's visibility
+
+**PATCH** `/api/v2/videos/public`
+
+```json
+{
+  "id": "6861477218a07a88cb6d5924",
+  "is_public": "false"
+}
+```
+
 ## Notes
 
 - Một số API có thể yêu cầu xác thực hoặc truyền token, hãy kiểm tra lại cấu hình bảo mật nếu triển khai thực tế.
