@@ -61,6 +61,7 @@ async function getVideos(videos) {
                     id: '$_id',
                     url: 1,
                     user: '$creator',
+                    is_public: 1,
                     thumbnail: { $arrayElemAt: ['$scenes.image', 0] }
                 }
             }
@@ -115,6 +116,7 @@ async function getPublicVideos() {
                     id: '$_id',
                     url: 1,
                     user: '$creator',
+                    is_public: 1,
                     thumbnail: { $arrayElemAt: ['$scenes.image', 0] }
                 }
             }
