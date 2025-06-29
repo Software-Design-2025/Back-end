@@ -285,28 +285,6 @@ Trigger Inngest function render/promo-video.
 - Response: `{ url: "videoUrl" }`
 ---
 
-## Notes
-
-- Một số API có thể yêu cầu xác thực hoặc truyền token, hãy kiểm tra lại cấu hình bảo mật nếu triển khai thực tế.
-- Đảm bảo các biến môi trường đã được thiết lập đúng.
-- Nếu dùng MongoDB Atlas, cần whitelist IP của bạn trên Atlas dashboard.
-
----
-
-## Tech Stack
-
-- Node.js, Express
-- MongoDB (Mongoose)
-- Firebase Storage
-- AssemblyAI, Google Cloud TTS, Replicate API
-- Inngest (event-driven workflow)
-
----
-
-## License
-
-MIT
-
 #### 4.3. Save Video Data
 **POST** `/routers/save-video-data`
 ```json
@@ -726,7 +704,9 @@ privacy_status: public, private, or unlisted.
 ]
 ```
 
-### 14. Create video using ffmpeg
+### 14. Video
+
+#### 14.1. Create video using ffmpeg
 
 **POST** `/api/v2/videos/generate`
 
@@ -800,6 +780,51 @@ privacy_status: public, private, or unlisted.
 ```json
 {
   "url": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Fc9291544-fd19-45c3-88b6-5a1516559808.mp4?alt=media&token=7b5b5703-dbe7-4309-aa95-e0c4a6415d69"
+}
+```
+
+#### 14.2. Insert video
+
+**POST** `/api/v2/videos`
+
+**Request**
+
+```json
+{
+  "voice": "Basil-PlayAI",
+  "scenes": [
+    {
+      "script": "The Powerpuff Girls is a beloved animated television series that follows the adventures of three superpowered kindergarten-aged sisters who fight crime and protect the city of Townsville. Created by Professor Utonium in a lab experiment gone wrong, the girls were born from a mixture of sugar, spice, everything nice, and the mysterious Chemical X.",
+        "image": "https://th.bing.com/th/id/OIP.MV-msxuUW_VXG0asK_76CAHaEK?w=1000&h=563&rs=1&pid=ImgDetMain&cb=idpwebpc2"
+    },
+    {
+      "script": "Blossom is the self-proclaimed leader of the trio, known for her intelligence, level-headedness, and strategic thinking. She wears pink and represents order and responsibility.",
+      "image": "https://th.bing.com/th/id/R.971afe8a08f326aba9563206adcf5296?rik=cfb%2fRYdxG7KJEQ&pid=ImgRaw&r=0"
+    }
+  ]
+}
+```
+
+**Response**
+
+```json
+{
+  "scenes": [
+    {
+      "image": "https://th.bing.com/th/id/OIP.MV-msxuUW_VXG0asK_76CAHaEK?w=1000&h=563&rs=1&pid=ImgDetMain&cb=idpwebpc2",
+      "audio": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2Fef024d37-010e-4f20-a9b1-9c5db3c92584.mp3?alt=media&token=31f75849-eff7-407d-8623-c2471896f79c",
+      "script": "The Powerpuff Girls is a beloved animated television series that follows the adventures of three superpowered kindergarten-aged sisters who fight crime and protect the city of Townsville. Created by Professor Utonium in a lab experiment gone wrong, the girls were born from a mixture of sugar, spice, everything nice, and the mysterious Chemical X."
+    },
+    {
+      "image": "https://th.bing.com/th/id/R.971afe8a08f326aba9563206adcf5296?rik=cfb%2fRYdxG7KJEQ&pid=ImgRaw&r=0",
+      "audio": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2F9abbaf0f-a2ff-4d9d-9ab7-5e1d9729f23f.mp3?alt=media&token=90ffa635-3700-4b92-aaff-2b54cf8900f8",
+      "script": "Blossom is the self-proclaimed leader of the trio, known for her intelligence, level-headedness, and strategic thinking. She wears pink and represents order and responsibility."
+    }
+  ],
+  "is_public": false,
+  "is_deleted": false,
+  "_id": "68613bdcad53d2168a6495ea",
+  "__v": 0
 }
 ```
 
