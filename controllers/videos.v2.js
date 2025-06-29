@@ -17,10 +17,12 @@ const {
     transcribe
 } = require('../helpers/ai-services.h');
 const {
-    insertVideo
+    insertVideo,
+    getVideos
 } = require('../repositories/videos');
 const {
-    insertCreatedVideo
+    insertCreatedVideo,
+    getCreatedVideos
 } = require('../repositories/users');
 
 const EXTENSIONS = {
@@ -308,7 +310,22 @@ async function insertVideoController(req, res) {
     }
 }
 
+async function getCreatedVideosController(req, res) {
+    try {
+        const videoIDs = await getCreatedVideos(req.user.id); 
+        const videos = await getVideos(videoIDs);
+        return res.status(200).json({
+            data: videos
+        });
+    }
+    catch (err) {
+        console.error('Error retrieving videos:', err);
+        return res.status(500).json({ error: "Server error", details: err.message });
+    }
+}
+
 module.exports = {
     insertVideoController,
-    createVideoController
+    createVideoController,
+    getCreatedVideosController
 };

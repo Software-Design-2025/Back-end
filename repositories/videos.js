@@ -1,4 +1,5 @@
 const Video = require('../models/videos.m');
+const mongoose = require('mongoose');
 
 async function insertVideo({ 
     url: url, 
@@ -20,6 +21,61 @@ async function insertVideo({
     }
 }
 
+async function getVideos(videos) {
+    try {
+        const results = await Video.aggregate([
+            {
+                $match: {
+                    _id: { $in: videos }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    let: { videoId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $in: ['$$videoId', '$created_videos'] }
+                            }
+                        },
+                        {
+                            $project: {
+                                fullname: 1,
+                                avatar: 1,
+                                username: 1
+                            }
+                        }
+                    ],
+                    as: 'creator'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$creator',
+                    preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    id: '$_id',
+                    url: 1,
+                    user: '$creator',
+                    thumbnail: { $arrayElemAt: ['$scenes.image', 0] }
+                }
+            }
+        ]);
+
+        return results;
+    }   
+    catch (error) {
+        console.error('Error fetching videos by IDs:', error);
+        throw error;
+    }
+}
+
 module.exports = {
-    insertVideo
+    insertVideo,
+    getVideos
 };

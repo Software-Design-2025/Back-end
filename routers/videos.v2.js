@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const { 
     createVideoController,
-    insertVideoController
+    insertVideoController,
+    getCreatedVideosController
 } = require('../controllers/videos.v2');
 const {
     createAudiosController
@@ -9,5 +10,6 @@ const {
 
 
 router.post('/', createAudiosController, createVideoController, insertVideoController)
+router.get('/', getCreatedVideosController);
 
 module.exports = router;

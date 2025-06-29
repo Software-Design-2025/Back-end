@@ -14,6 +14,22 @@ async function insertCreatedVideo(userId, videoId) {
     }
 }
 
+async function getCreatedVideos(userId) {
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return user.created_videos;
+    }
+    catch (error) {
+        console.error('Error retrieving created videos:', error);
+        throw error;
+    }
+}
+
+
 module.exports = {
-    insertCreatedVideo
+    insertCreatedVideo,
+    getCreatedVideos
 };

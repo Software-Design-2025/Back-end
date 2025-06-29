@@ -789,6 +789,29 @@ privacy_status: public, private, or unlisted.
 }
 ```
 
+#### 14.2. Get videos of an user
+
+**GET** `/api/v2/videos`
+
+**Response**
+```json
+{
+  "data": [
+    {
+      "url": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2F2ff11c48-3fa5-4723-9fbc-a14e93ebb0b7.mp4?alt=media&token=14f2ada6-1842-4fc5-9bcb-1a090d174410",
+      "id": "6861477218a07a88cb6d5924",
+      "user": {
+        "_id": "68502853fe5a4473aca3669a",
+        "fullname": "Nguyen Linh Chi",
+        "username": "anna23_12",
+        "avatar": "https://i.pinimg.com/736x/2a/53/70/2a5370c752b7f4bd65766f3550afdb5d.jpg"
+      },
+      "thumbnail": "https://th.bing.com/th/id/OIP.MV-msxuUW_VXG0asK_76CAHaEK?w=1000&h=563&rs=1&pid=ImgDetMain&cb=idpwebpc2"
+    }
+  ]
+}
+```
+
 ## Notes
 
 - Một số API có thể yêu cầu xác thực hoặc truyền token, hãy kiểm tra lại cấu hình bảo mật nếu triển khai thực tế.
