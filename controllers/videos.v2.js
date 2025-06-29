@@ -18,7 +18,8 @@ const {
 } = require('../helpers/ai-services.h');
 const {
     insertVideo,
-    getVideos
+    getVideos,
+    getPublicVideos
 } = require('../repositories/videos');
 const {
     insertCreatedVideo,
@@ -339,9 +340,23 @@ async function getFavoriteVideosController(req, res) {
     }
 }
 
+async function getPublicVideosController(req, res) {
+    try {
+        const videos = await getPublicVideos();
+        return res.status(200).json({
+            data: videos
+        });
+    }
+    catch (err) {
+        console.error('Error retrieving public videos:', err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+
 module.exports = {
     insertVideoController,
     createVideoController,
     getCreatedVideosController,
-    getFavoriteVideosController
+    getFavoriteVideosController,
+    getPublicVideosController
 };
