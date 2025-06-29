@@ -11,6 +11,17 @@ const tokensSchema = new mongoose.Schema({
     }
 }, { _id: false });
 
+const videosSchema = new mongoose.Schema({
+    id: {
+        type: String,
+        required: true
+    },
+    url: {
+        type: String,
+        required: true
+    }
+}, { _id: false });
+
 const socialAccountSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -34,7 +45,10 @@ const socialAccountSchema = new mongoose.Schema({
         type: tokensSchema,
         required: true
     },
-    videos: [String],
+    videos: {
+        type: [videosSchema],
+        default: []
+    },
     avatar: String
 });
 

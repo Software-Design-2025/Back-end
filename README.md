@@ -633,6 +633,44 @@ privacy_status: public, private, or unlisted.
 }
 ```
 
+#### 11.5. Get all uploaded videos
+
+**GET** `/api/youtube/videos?account_id=`
+
+**Response**
+
+```json
+[
+  {
+    "id": "iUV1rjunqT8",
+    "title": "Big Buck Bunny",
+    "description": "Test upload video on 28/06/2025",
+    "thumbnail": "https://i.ytimg.com/vi/iUV1rjunqT8/default.jpg",
+    "privacy_status": "public",
+    "url": "https://www.youtube.com/watch?v=iUV1rjunqT8"
+  }
+]
+```
+
+#### 11.6. Get top view videos
+
+**GET** `/api/youtube/top-views?account_id=`
+
+```json
+[
+  {
+    "id": "NMrpNBFz6zA",
+    "title": "Powerpuff Girls",
+    "view_count": 5
+  },
+  {
+    "id": "iUV1rjunqT8",
+    "title": "Big Buck Bunny",
+    "view_count": 1
+  }
+]
+```
+
 ### 12. Voice
 
 #### 12.1. Text to speech
