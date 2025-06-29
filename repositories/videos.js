@@ -1,8 +1,12 @@
 const Video = require('../models/videos.m');
 
-async function insertVideo(scences) {
+async function insertVideo({ 
+    url: url, 
+    scenes: scences 
+}) {
     try {
         const video = new Video({
+            url: url,
             scenes: scences,
             is_public: false,
             is_deleted: false

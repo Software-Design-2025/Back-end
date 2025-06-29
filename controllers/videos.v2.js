@@ -72,7 +72,8 @@ async function getDuration(file) {
 }
 
 async function createVideos({ 
-    size: size, 
+    width: width,
+    height: height,
     scenes: scenes 
 }) {
     let promises = [];
@@ -90,7 +91,7 @@ async function createVideos({
                 .inputOptions([
                     '-loop 1'
                 ])
-                .size(size)
+                .size(`${width}x${height}`)
                 .input(audio)
                 .videoFilters('format=yuv420p')
                 .outputOptions([
@@ -265,12 +266,13 @@ async function uploadToFirebase(filePath) {
     return url;
 }
 
-async function createVideoController(req, res) {
+async function createVideoController(req, res, next) {
     try {
-        const { scenes, size, transition } = req.body;
+        const { scenes, width, height, transition } = req.body;
 
         const videos = await createVideos({
-            size: size,
+            width: width,
+            height: height,
             scenes: scenes
         });
 
@@ -281,9 +283,9 @@ async function createVideoController(req, res) {
 
         const finalVideo = await addSubtitles(mergedVideo);
 
-        const url = await uploadToFirebase(finalVideo);
+        req.body.url = await uploadToFirebase(finalVideo);
 
-        return res.status(200).json({ url: url });
+        next();
     } catch (err) {
         console.error('Error creating video:', err);
         return res.status(500).json({ message: 'Internal Server Error' });
@@ -292,8 +294,11 @@ async function createVideoController(req, res) {
 
 async function insertVideoController(req, res) {
     try {
-        const { scenes } = req.body;
-        const video = await insertVideo(scenes);
+        const { scenes, url } = req.body;
+        const video = await insertVideo({
+            url: url,
+            scenes: scenes
+        });
         await insertCreatedVideo(req.user.id, video._id);
         return res.status(201).json(video);
     }
