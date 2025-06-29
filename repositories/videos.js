@@ -9,8 +9,7 @@ async function insertVideo({
         const video = new Video({
             url: url,
             scenes: scences,
-            is_public: false,
-            is_deleted: false
+            is_public: false
         });
         await video.save();
         return video;
@@ -143,9 +142,21 @@ async function setPublicVideo(videoId, isPublic) {
     }
 }
 
+async function deleteVideo(videoId) {
+    try {
+        const result = await Video.deleteOne({ _id: videoId });
+        return result;
+    }
+    catch (error) {
+        console.error('Error deleting video:', error);
+        throw error;
+    }
+}
+
 module.exports = {
     insertVideo,
     getVideos,
     getPublicVideos,
-    setPublicVideo
+    setPublicVideo,
+    deleteVideo
 };

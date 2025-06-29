@@ -20,7 +20,8 @@ const {
     insertVideo,
     getVideos,
     getPublicVideos,
-    setPublicVideo
+    setPublicVideo,
+    deleteVideo
 } = require('../repositories/videos');
 const {
     insertCreatedVideo,
@@ -367,11 +368,26 @@ async function setPublicVideoController(req, res) {
     }
 }
 
+async function deleteVideoController(req, res) {
+    try {
+        const videoId = req.params.id;
+        const result = await deleteVideo(videoId);
+        return res.status(200).json({
+            message: 'Video deleted successfully'
+        });
+    }
+    catch (error) {
+        console.error('Error deleting video:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     insertVideoController,
     createVideoController,
     getCreatedVideosController,
     getFavoriteVideosController,
     getPublicVideosController,
-    setPublicVideoController
+    setPublicVideoController,
+    deleteVideoController
 };

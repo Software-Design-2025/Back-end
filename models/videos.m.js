@@ -26,10 +26,6 @@ const videosSchema = new mongoose.Schema({
     is_public: {
         type: Boolean,
         default: false
-    },
-    is_deleted: {
-        type: Boolean,
-        default: false
     }
 })
 

@@ -871,6 +871,10 @@ privacy_status: public, private, or unlisted.
 }
 ```
 
+#### 14.6. Delete video
+
+**DELETE** `/api/v2/videos/:id`
+
 ## Notes
 
 - Một số API có thể yêu cầu xác thực hoặc truyền token, hãy kiểm tra lại cấu hình bảo mật nếu triển khai thực tế.
