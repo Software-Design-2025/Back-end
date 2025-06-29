@@ -236,7 +236,8 @@ module.exports = {
             accounts = accounts.map(account => ({
                 id: account._id,
                 username: account.username,
-                avatar: account.avatar
+                avatar: account.avatar,
+                account_id: account.account_id
             }));
 
             return res.status(200).json({
