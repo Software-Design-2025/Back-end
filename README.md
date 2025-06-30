@@ -718,6 +718,21 @@ privacy_status: public, private, or unlisted.
 ]
 ```
 
+#### 13.4. Get stickers
+
+**GET** `/api/assets/stickers`
+
+```json
+[
+  {
+    "url": "https://www.pngall.com/wp-content/uploads/13/Sticker-No-Background.png"
+  },
+  {
+    "url": "https://tse1.mm.bing.net/th/id/OIP.zjKPXUaTg3mXN4lh_KCL2QHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
+  }
+]
+```
+
 ### 14. Video
 
 #### 14.1. Create video

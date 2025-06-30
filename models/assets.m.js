@@ -6,7 +6,7 @@ const assetsSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['voice', 'sound', 'font'],
+        enum: ['voice', 'sound', 'font', 'sticker'],
     },
     detail: {
         type: Object,
@@ -28,6 +28,10 @@ const ASSETS_DATA = [
     {
         category: 'font',
         filename: 'fonts.json'
+    },
+    {
+        category: 'sticker',
+        filename: 'stickers.json'
     }
 ]
 

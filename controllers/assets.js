@@ -1,7 +1,8 @@
 const { 
     getSounds,
     getVoices,
-    getFonts
+    getFonts,
+    getStickers
 } = require('../repositories/assets');
 
 async function getSoundsController(req, res) {
@@ -34,8 +35,19 @@ async function getFontsController(req, res) {
     }
 }
 
+async function getStickersController(req, res) {
+    try {
+        const stickers = await getStickers();
+        return res.status(200).json(stickers);
+    }
+    catch (error) {
+        return res.status(500).json({ message: 'Failed to fetch stickers' });
+    }
+}
+
 module.exports = {
     getSoundsController,
     getVoicesController,
-    getFontsController
+    getFontsController,
+    getStickersController
 };

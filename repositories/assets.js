@@ -30,8 +30,19 @@ async function getFonts() {
     }
 }
 
+async function getStickers() {
+    try {
+        const stickers = await Asset.find({ category: 'sticker' });
+        return stickers.map(sticker => sticker.detail);
+    } catch (error) {
+        console.error('Error fetching stickers:', error);
+        throw new Error('Failed to fetch stickers');
+    }
+}
+
 module.exports = {
     getSounds,
     getVoices,
-    getFonts
+    getFonts,
+    getStickers
 };
