@@ -20,11 +20,13 @@ const usersSchema = new mongoose.Schema({
     },
     created_videos: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'videos'
+        ref: 'videos',
+        default: []
     }],
     favorite_videos: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'videos'
+        ref: 'videos',
+        default: []
     }]
 });
 
