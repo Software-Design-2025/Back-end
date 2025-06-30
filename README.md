@@ -689,7 +689,7 @@ privacy_status: public, private, or unlisted.
 ]
 ```
 
-#### 13.1. Get sounds
+#### 13.2. Get sounds
 
 **GET** `/api/assets/sounds`
 
@@ -700,6 +700,35 @@ privacy_status: public, private, or unlisted.
   {
     "display_name": "Moonlight",
     "url": "https://res.cloudinary.com/dvar3w9dm/video/upload/v1751033565/scott-buckley-moonlight_chosic.com_vrn3sy.mp3"
+  }
+]
+```
+
+#### 13.3. Get fonts
+
+**GET** `/api/assets/fonts`
+
+**Response**
+
+```json
+[
+  {
+    "url": "https://res.cloudinary.com/dvar3w9dm/raw/upload/v1751303101/AovelSansRounded-rdDL_m4uqjr.ttf"
+  }
+]
+```
+
+#### 13.4. Get stickers
+
+**GET** `/api/assets/stickers`
+
+```json
+[
+  {
+    "url": "https://www.pngall.com/wp-content/uploads/13/Sticker-No-Background.png"
+  },
+  {
+    "url": "https://tse1.mm.bing.net/th/id/OIP.zjKPXUaTg3mXN4lh_KCL2QHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
   }
 ]
 ```
