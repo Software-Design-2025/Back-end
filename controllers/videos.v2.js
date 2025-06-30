@@ -21,7 +21,8 @@ const {
     getVideos,
     getPublicVideos,
     setPublicVideo,
-    deleteVideo
+    deleteVideo,
+    updateURL
 } = require('../repositories/videos');
 const {
     insertCreatedVideo,
@@ -33,11 +34,13 @@ const EXTENSIONS = {
     'image/jpeg': '.jpg',
     'image/png': '.png',
     'image/gif': '.gif',
+    'image/webp': '.webp',
     'audio/mpeg': '.mp3',
     'audio/wav': '.wav',
     'audio/aac': '.aac',
     'video/mp4': '.mp4',
-    'video/webm': '.webm'
+    'video/webm': '.webm',
+    'font/ttf': '.ttf',
 };
 
 const FADE_DURATION_IN_SECONDS = 1;
@@ -382,6 +385,162 @@ async function deleteVideoController(req, res) {
     }
 }
 
+async function addEffects(video, options) {
+    const outputFile = createFilePath('.mp4');
+    
+    const videoFile = await download(video);
+    const videoDuration = await getDuration(videoFile);
+    
+    const command = ffmpeg().input(videoFile);
+    const filters = [];
+    const tempfiles = [videoFile];
+
+    let index = 1;
+
+    let { music, stickers, texts } = options;
+
+    if (music) {
+        const musicFile = await download(music.url);
+        const musicDuration = await getDuration(musicFile);
+        const musicLoopCount = Math.ceil(videoDuration / musicDuration);
+        tempfiles.push(musicFile);
+        index++;
+
+        command
+            .input(musicFile)
+            .inputOptions(['-stream_loop', musicLoopCount.toString()]);
+
+        filters.push({
+            filter: 'volume',
+            options: music.volume.toString(),
+            inputs: '1:a',
+            outputs: 'music_out'
+        });
+
+        filters.push({
+            filter: 'amix',
+            options: {
+                inputs: 2,
+                duration: 'first',
+                dropout_transition: 0.5
+            },
+            inputs: ['0:a', 'music_out'],
+            outputs: 'final_audio'
+        });
+    }
+
+    let lastOverlay = '0:v';
+
+    if (stickers && stickers.length > 0) {
+        stickers = await Promise.all(stickers.map(async (sticker) => {
+            const stickerFile = await download(sticker.url);
+            tempfiles.push(stickerFile);
+            return {
+                ...sticker,
+                file: stickerFile
+            }
+        }));
+
+        for (const sticker of stickers) {
+            command.input(sticker.file);
+
+            filters.push({
+                filter: 'scale',
+                options: `${sticker.width}:${sticker.height}`,
+                inputs: `${index}:v`,
+                outputs: `scaledSticker${index}`
+            });
+
+            filters.push({
+                filter: 'overlay',
+                options: {
+                    x: sticker.x,
+                    y: sticker.y,
+                    enable: `between(t,${sticker.start},${sticker.end})`
+                },
+                inputs: [lastOverlay, `scaledSticker${index}`],
+                outputs: `overlay${index}`
+            });
+
+            lastOverlay = `overlay${index}`;
+            index++;
+        }
+    }
+
+    if (texts && texts.length > 0) {
+        texts = await Promise.all(texts.map(async (text) => {
+            const fontFile = await download(text.font);
+            tempfiles.push(fontFile);
+            return {
+                ...text,
+                fontFile: fontFile
+            };
+        }));
+
+        for (const text of texts) {
+            filters.push({
+                filter: 'drawtext',
+                options: {
+                    text: text.content,
+                    fontfile: text.fontFile.replace(/\\/g, '\/').replace(/:/g, '\\\\:'),
+                    fontsize: text.size,
+                    fontcolor: text.color,
+                    x: text.x,
+                    y: text.y,
+                    enable: `between(t,${text.start},${text.end})`
+                },
+                inputs: lastOverlay,
+                outputs: `overlay${index}`
+            });
+            lastOverlay = `overlay${index}`;
+            index++;
+        }
+    }
+
+    const promise = new Promise((resolve, reject) => {
+        command
+            .complexFilter(filters)
+            .outputOptions([
+                `-map ${lastOverlay === '0:v' ? '0:v' : `[${lastOverlay}]`}`,
+                `-map ${music ? '[final_audio]' : '0:a'}`,
+                '-c:v libx264',
+                '-c:a mp3'
+            ])
+            .output(outputFile)
+            .on('end', () => resolve(outputFile))
+            .on('error', (err) => { reject(err) })
+            .run();
+    });
+
+    const finalVideo = await promise;
+    remove(tempfiles);
+    return finalVideo;
+}
+
+async function editVideoController(req, res) {
+    try {
+        const { options } = req.body;
+        const videoId = req.params.id;
+        const video = (await getVideos([videoId]))[0];
+        const videoFile = await addEffects(video.url, options);
+
+        const url = await uploadToFirebase(videoFile);
+
+        const updatedVideo = await updateURL(videoId, url);
+
+        return res.status(200).json({
+            data: {
+                id: updatedVideo._id,
+                url: updatedVideo.url
+            }
+        });
+    }
+    catch (error) {
+        console.error('Error editing video:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     insertVideoController,
     createVideoController,
@@ -389,5 +548,6 @@ module.exports = {
     getFavoriteVideosController,
     getPublicVideosController,
     setPublicVideoController,
-    deleteVideoController
+    deleteVideoController,
+    editVideoController
 };

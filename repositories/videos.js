@@ -22,6 +22,13 @@ async function insertVideo({
 
 async function getVideos(videos) {
     try {
+        videos = videos.map(video => {
+            if (typeof video === 'string') {
+                return new mongoose.Types.ObjectId(video);
+            }
+            return video;
+        });
+
         const results = await Video.aggregate([
             {
                 $match: {
@@ -155,10 +162,26 @@ async function deleteVideo(videoId) {
     }
 }
 
+async function updateURL(id, url) {
+    try {
+        const updatedVideo = await Video.findByIdAndUpdate(
+            id,
+            { $set: { url: url } },
+            { new: true } 
+        );
+        return updatedVideo;
+    }
+    catch (error) {
+        console.error('Error updating video URL:', error);
+        throw error;
+    }
+}
+
 module.exports = {
     insertVideo,
     getVideos,
     getPublicVideos,
     setPublicVideo,
-    deleteVideo
+    deleteVideo,
+    updateURL
 };

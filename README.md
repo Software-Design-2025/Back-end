@@ -875,6 +875,62 @@ privacy_status: public, private, or unlisted.
 
 **DELETE** `/api/v2/videos/:id`
 
+#### 14.7. Edit video
+
+**PATCH** `/api/v2/videos/edit/:id`
+
+**Request**
+
+```json
+{
+  "options": {
+    "music": {
+      "volume": 0.5,
+      "url": "https://res.cloudinary.com/dvar3w9dm/video/upload/v1751033565/scott-buckley-moonlight_chosic.com_vrn3sy.mp3"
+    },
+    "stickers": [
+      {
+        "url": "https://tse3.mm.bing.net/th/id/OIP.0hHfxPPCyhNO3YHsQUvBjAHaGs?rs=1&pid=ImgDetMain&o=7&rm=3",
+        "start": 0,
+        "end": 3,
+        "width": 100,
+        "height": 100,
+        "x": 60,
+        "y": 60
+      }
+    ],
+    "texts": [
+      {
+        "content": "Powerpuff Girls",
+        "start": 0,
+        "end": 10,
+        "x": 100,
+        "y": 100,
+        "size": 50,
+        "color": "#ddeeff",
+        "font": "https://res.cloudinary.com/dvar3w9dm/raw/upload/v1751299254/LoveDays-2v7Oe_yb9zfm.ttf"
+      }
+    ]
+  }
+}
+```
+
+- x, y: top left
+- x, y, size, width, height: px
+- start, end: second
+- color: hex
+
+**Response**
+
+```json
+{
+  "data": {
+    "id": "video-id",
+    "url": "updated-url"
+  }
+}
+```
+
 ## Notes
 
 - Một số API có thể yêu cầu xác thực hoặc truyền token, hãy kiểm tra lại cấu hình bảo mật nếu triển khai thực tế.
