@@ -6,7 +6,7 @@ const assetsSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['voice', 'sound'],
+        enum: ['voice', 'sound', 'font'],
     },
     detail: {
         type: Object,
@@ -24,27 +24,29 @@ const ASSETS_DATA = [
     {
         category: 'sound',
         filename: 'sounds.json'
+    },
+    {
+        category: 'font',
+        filename: 'fonts.json'
     }
 ]
 
 async function initAssetsCollection() {
     try {
+        await Asset.deleteMany({}); 
         let assets = await Asset.find();
 
-        if (assets.length === 0) {
-            let allData = [];
-            for (const asset of ASSETS_DATA) {
-                let data = JSON.parse(fs.readFileSync(path.join(__dirname, '../_data', asset.filename), 'utf8'));
-                data = data.map(item => ({
-                    category: asset.category,
-                    detail: item
-                }));
-                allData = allData.concat(data);
-            }
-            
-            assets = await Asset.insertMany(allData);
+        let allData = [];
+        for (const asset of ASSETS_DATA) {
+            let data = JSON.parse(fs.readFileSync(path.join(__dirname, '../_data', asset.filename), 'utf8'));
+            data = data.map(item => ({
+                category: asset.category,
+                detail: item
+            }));
+            allData = allData.concat(data);
         }
-
+        
+        assets = await Asset.insertMany(allData);
         console.log('Assets collection initialized successfully');
     }
     catch (error) {

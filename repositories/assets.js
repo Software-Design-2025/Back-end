@@ -20,7 +20,18 @@ async function getVoices() {
     }
 }
 
+async function getFonts() {
+    try {
+        const fonts = await Asset.find({ category: 'font' });
+        return fonts.map(font => font.detail);
+    } catch (error) {
+        console.error('Error fetching fonts:', error);
+        throw new Error('Failed to fetch fonts');
+    }
+}
+
 module.exports = {
     getSounds,
-    getVoices
+    getVoices,
+    getFonts
 };
