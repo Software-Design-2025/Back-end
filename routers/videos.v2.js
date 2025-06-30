@@ -6,7 +6,8 @@ const {
     getFavoriteVideosController,
     getPublicVideosController,
     setPublicVideoController,
-    deleteVideoController
+    deleteVideoController,
+    editVideoController
 } = require('../controllers/videos.v2');
 const {
     createAudiosController
@@ -15,6 +16,7 @@ const {
 
 router.post('/', createAudiosController, createVideoController, insertVideoController)
 router.get('/', getCreatedVideosController);
+router.patch('/edit/:id', editVideoController);
 router.get('/favorites', getFavoriteVideosController);
 router.get('/public', getPublicVideosController);
 router.patch('/public', setPublicVideoController);
