@@ -3,11 +3,15 @@ const mongoose = require('mongoose');
 
 async function insertVideo({ 
     url: url, 
+    width: width,
+    height: height,
     scenes: scences 
 }) {
     try {
         const video = new Video({
             url: url,
+            width: width,
+            height: height,
             scenes: scences,
             is_public: false
         });
@@ -67,6 +71,8 @@ async function getVideos(videos) {
                     _id: 0,
                     id: '$_id',
                     url: 1,
+                    width: 1,
+                    height: 1,
                     user: '$creator',
                     is_public: 1,
                     thumbnail: { $arrayElemAt: ['$scenes.image', 0] }
@@ -122,6 +128,8 @@ async function getPublicVideos() {
                     _id: 0,
                     id: '$_id',
                     url: 1,
+                    width: 1,
+                    height: 1,
                     user: '$creator',
                     is_public: 1,
                     thumbnail: { $arrayElemAt: ['$scenes.image', 0] }

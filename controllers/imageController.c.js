@@ -15,15 +15,15 @@ const ConvertImage = async (imageUrl) => {
 
 async function generateImage(req, res) {
     try {
-        const { prompt } = req.body;
+        const { prompt, width, height } = req.body;
         const replicate = new Replicate({
             auth: process.env.REPLICATE_API_TOKEN
         });
 
         const input = {
             prompt: prompt,
-            height: 1280,
-            width: 1024,
+            height: height || 1280,
+            width: width || 720,
             num_outputs: 1,
         };
 
@@ -48,7 +48,6 @@ async function generateImage(req, res) {
 
         await uploadString(storageRef, base64Image, 'data_url');
         const downloadUrl = await getDownloadURL(storageRef);
-        console.log(downloadUrl);
 
         return res.json({ result: downloadUrl });
     } catch (error) {
