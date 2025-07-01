@@ -183,8 +183,25 @@ Lưu link video output.
 #### POST /routers/video/generate-caption
 Sinh caption từ audio.
 
-#### POST /routers/video/generate-image
-Sinh ảnh AI.
+#### POST /api/video/generate-image
+
+**Request**
+
+```json
+{
+  "width": 1280,
+  "height": 720,
+  "prompt": "A lush, green forest with tall trees, sunlight filtering through the leaves, a crystal-clear river flowing through the scene, animals like deer and birds peacefully coexisting, and no signs of pollution. The environment is vibrant and full of life, emphasizing the beauty of nature and ecological balance. Include soft lighting, realistic textures, and a sense of serenity"
+}
+```
+
+**Response**
+
+```json
+{
+  "result": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2F1751373995362.png?alt=media&token=62400268-3ee9-451f-a15a-56b247f31330"
+}
+```
 
 #### POST /routers/video/add-favorite
 Thêm video vào danh sách yêu thích.

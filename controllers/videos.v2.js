@@ -303,9 +303,11 @@ async function createVideoController(req, res, next) {
 
 async function insertVideoController(req, res) {
     try {
-        const { scenes, url } = req.body;
+        const { scenes, url, width, height } = req.body;
         const video = await insertVideo({
             url: url,
+            width: width,
+            height: height,
             scenes: scenes
         });
         await insertCreatedVideo(req.user.id, video._id);
@@ -530,7 +532,7 @@ async function editVideoController(req, res) {
 
         return res.status(200).json({
             data: {
-                id: updatedVideo._id,
+                id: updatedVideo.id,
                 url: updatedVideo.url
             }
         });

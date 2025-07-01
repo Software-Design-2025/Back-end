@@ -19,6 +19,14 @@ const videosSchema = new mongoose.Schema({
     url: {
         type: String
     },
+    width: {
+        type: Number,
+        default: 1280
+    },
+    height: {
+        type: Number,
+        default: 720
+    },
     scenes: {
         type: [scenesSchema],
         default: []
