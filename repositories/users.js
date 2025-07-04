@@ -42,9 +42,38 @@ async function getFavoriteVideos(userId) {
     }
 }
 
+async function insertFavoriteVideo(userId, videoId) {
+    try {
+        await User.findByIdAndUpdate(userId, {
+            $push: { 
+                favorite_videos: videoId
+            }
+        });
+    }
+    catch (error) {
+        console.error('Error inserting favorite video:', error);
+        throw error;
+    }
+}
+
+async function removeFavoriteVideo(userId, videoId) {
+    try {
+        await User.findByIdAndUpdate(userId, {
+            $pull: { 
+                favorite_videos: videoId
+            }
+        });
+    }
+    catch (error) {
+        console.error('Error removing favorite video:', error);
+        throw error;
+    }
+}
 
 module.exports = {
     insertCreatedVideo,
     getCreatedVideos,
-    getFavoriteVideos
+    getFavoriteVideos,
+    insertFavoriteVideo,
+    removeFavoriteVideo
 };

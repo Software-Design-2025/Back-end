@@ -27,7 +27,9 @@ const {
 const {
     insertCreatedVideo,
     getCreatedVideos,
-    getFavoriteVideos
+    getFavoriteVideos,
+    insertFavoriteVideo,
+    removeFavoriteVideo
 } = require('../repositories/users');
 
 const EXTENSIONS = {
@@ -543,6 +545,42 @@ async function editVideoController(req, res) {
     }
 }
 
+async function insertFavoriteVideoController(req, res) {
+    try {
+        const userId = req.user.id;
+        const videoId = req.params.id;
+        if (!userId || !videoId) {
+            return res.status(400).json({ error: "Missing userId or videoId" });
+        }
+        const result = await insertFavoriteVideo(userId, videoId);
+        return res.status(200).json({
+            message: 'Added video to favorites successfully'
+        });
+    }
+    catch (error) {
+        console.error('Error adding favorite video:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+async function removeFavoriteVideoController(req, res) {
+    try {
+        const userId = req.user.id;
+        const videoId = req.params.id;
+        if (!userId || !videoId) {
+            return res.status(400).json({ error: "Missing userId or videoId" });
+        }
+        const result = await removeFavoriteVideo(userId, videoId, false);
+        return res.status(200).json({
+            message: 'Removed video from favorites successfully'
+        });
+    }
+    catch (error) {
+        console.error('Error removing favorite video:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 module.exports = {
     insertVideoController,
     createVideoController,
@@ -551,5 +589,7 @@ module.exports = {
     getPublicVideosController,
     setPublicVideoController,
     deleteVideoController,
-    editVideoController
+    editVideoController,
+    insertFavoriteVideoController,
+    removeFavoriteVideoController
 };

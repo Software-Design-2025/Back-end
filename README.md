@@ -977,6 +977,14 @@ privacy_status: public, private, or unlisted.
 }
 ```
 
+#### 14.8. Add favorite video
+
+**PATCH** `/api/v2/videos/favorites/:id`
+
+#### 14.9. Remove favorite video
+
+**DELETE** `/api/v2/videos/favorites/:id`
+
 ## Notes
 
 - Một số API có thể yêu cầu xác thực hoặc truyền token, hãy kiểm tra lại cấu hình bảo mật nếu triển khai thực tế.
