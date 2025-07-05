@@ -1,0 +1,29 @@
+{
+  "scenes": [
+    {
+      "script": "The Powerpuff Girls is a beloved animated television series that follows the adventures of three superpowered kindergarten-aged sisters who fight crime and protect the city of Townsville. Created by Professor Utonium in a lab experiment gone wrong, the girls were born from a mixture of sugar, spice, everything nice, and the mysterious Chemical X.",
+      "image": "https://th.bing.com/th/id/OIP.MV-msxuUW_VXG0asK_76CAHaEK?w=1000&h=563&rs=1&pid=ImgDetMain&cb=idpwebpc2",
+      "audio": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2Fb54876bb-ab77-4415-a661-7b67de2dbdc8.mp3?alt=media&token=2964aef3-f726-4b20-89e6-df38fcdfbaca"
+    },
+    {
+      "script": "Blossom is the self-proclaimed leader of the trio, known for her intelligence, level-headedness, and strategic thinking. She wears pink and represents order and responsibility.",
+      "image": "https://th.bing.com/th/id/R.971afe8a08f326aba9563206adcf5296?rik=cfb%2fRYdxG7KJEQ&pid=ImgRaw&r=0",
+      "audio": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2Fd5000919-3baa-45c7-aa5f-b74b31f7e66d.mp3?alt=media&token=9074c787-b18b-4eb3-a334-14f127702ec1"
+    },
+    {
+      "script": "Bubbles is the sweet and cheerful one, often seen as the heart of the group. With her light blue dress and pigtails, she brings kindness, creativity, and unexpected strength to the team.",
+      "image": "https://th.bing.com/th/id/OIP.txldTbuSDw2UQJ04WWIMfwHaEK?rs=1&pid=ImgDetMain&cb=idpwebpc2",
+      "audio": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2Fd7f12902-8987-4274-bc2a-107fa16a4ef9.mp3?alt=media&token=d29aa3a5-e7af-49d7-a2e6-2c8640fe5675"
+    },
+    {
+      "script": "Buttercup, dressed in green, is the toughest and most headstrong of the three. She's fiercely brave, loves action, and never backs down from a fight.",
+      "image": "https://th.bing.com/th/id/OIP.KoPuCOXP64K00WBr8xEr6gHaEK?rs=1&pid=ImgDetMain&cb=idpwebpc2",
+      "audio": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2F2f2b2e88-5dca-4a22-97ad-66ca3e24456f.mp3?alt=media&token=96ec2c6b-a82d-4741-9a3b-af63cee6f8d7"
+    },
+    {
+      "script": "Together, these three unique personalities form a powerful team that shows viewers the importance of courage, teamwork, and standing up for what is right.",
+      "image": "https://th.bing.com/th/id/OIP.uNNn8s0ih-ztuEiAyjgiFgHaEK?rs=1&pid=ImgDetMain&cb=idpwebpc2",
+      "audio": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2F25bc6234-853c-41e6-8598-0e151d84294d.mp3?alt=media&token=5a5b8072-9e61-404e-92e9-8ead93110fc9"
+    }
+  ]
+}
