@@ -1,0 +1,344 @@
+const { google } = require('googleapis');
+const url = require('url');
+const streamifier = require('streamifier');
+const {
+  getSocialAccount,
+  getSocialAccountOfUser,
+  updateSocialAccount,
+  insertUploadedVideo,
+} = require('../repositories/social-accounts.repository');
+
+const createOauth2Client = () => {
+  return new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    `${process.env.HOSTNAME}/api/youtube/auth/callback`
+  );
+};
+
+async function authController(req, res) {
+  try {
+    const oauth2Client = createOauth2Client();
+
+    const scopes = [
+      'https://www.googleapis.com/auth/youtube',
+      'https://www.googleapis.com/auth/youtube.upload',
+      'https://www.googleapis.com/auth/youtube.force-ssl',
+    ];
+
+    const authorizationUrl = oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      scope: scopes,
+      include_granted_scopes: true,
+      prompt: 'consent',
+      state: encodeURIComponent(
+        JSON.stringify({
+          userId: req.user.id,
+          redirectUrl: req.query.redirect_url,
+        })
+      ),
+    });
+
+    res.redirect(authorizationUrl);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+async function authCallbackController(req, res) {
+  try {
+    const oauth2Client = createOauth2Client();
+
+    let q = url.parse(req.url, true).query;
+    const { userId, redirectUrl } = JSON.parse(
+      decodeURIComponent(q.state || '{}')
+    );
+
+    if (q.error) {
+      throw new Error(q.error_description || 'YouTube authentication failed');
+    } else {
+      let { tokens } = await oauth2Client.getToken({
+        code: q.code,
+        codeVerifier: '',
+      });
+      oauth2Client.setCredentials(tokens);
+
+      const service = google.youtube({
+        version: 'v3',
+        auth: oauth2Client,
+      });
+
+      const channelsListResponse = await service.channels.list({
+        part: 'id,snippet',
+        mine: true,
+      });
+
+      if (
+        !channelsListResponse.data.items ||
+        channelsListResponse.data.items.length === 0
+      ) {
+        return res
+          .status(400)
+          .json({ message: 'No YouTube channel found for this account.' });
+      }
+
+      const channel = channelsListResponse.data.items[0];
+
+      await updateSocialAccount({
+        userId: userId,
+        platform: 'youtube',
+        accountId: channel.id,
+        data: {
+          username: channel.snippet.title,
+          avatar: channel.snippet.thumbnails.default.url,
+          tokens: {
+            access_token: tokens.access_token,
+            refresh_token: tokens.refresh_token,
+          },
+        },
+      });
+
+      res.redirect(redirectUrl);
+    }
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+async function uploadVideoController(req, res) {
+  try {
+    const oauth2Client = createOauth2Client();
+
+    const account = await getSocialAccount({
+      userId: req.user.id,
+      platform: 'youtube',
+      accountId: req.body.account_id,
+    });
+
+    oauth2Client.setCredentials(account.tokens);
+
+    const youtube = google.youtube({
+      version: 'v3',
+      auth: oauth2Client,
+    });
+
+    const response = await fetch(req.body.url);
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const stream = streamifier.createReadStream(buffer);
+
+    const uploadResponse = await youtube.videos.insert({
+      part: 'id,snippet,status',
+      requestBody: {
+        snippet: {
+          title: req.body.title,
+          description: req.body.description,
+        },
+        status: {
+          embeddable: true,
+          privacyStatus: req.body.privacy_status,
+        },
+      },
+      media: {
+        body: stream,
+      },
+    });
+
+    const video = {
+      id: uploadResponse.data.id,
+      url: `https://www.youtube.com/watch?v=${uploadResponse.data.id}`,
+    };
+
+    await insertUploadedVideo({
+      userId: req.user.id,
+      platform: 'youtube',
+      accountId: req.body.account_id,
+      video: video,
+    });
+
+    return res.status(200).json({
+      message: 'Video uploaded successfully',
+      video: video,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+async function getStatisticsController(req, res) {
+  try {
+    const oauth2Client = createOauth2Client();
+
+    const account = await getSocialAccount({
+      userId: req.user.id,
+      platform: 'youtube',
+      accountId: req.query.account_id,
+    });
+
+    if (!account) {
+      return res.status(404).json({ message: 'YouTube account not found' });
+    }
+    oauth2Client.setCredentials(account.tokens);
+
+    const youtube = google.youtube({
+      version: 'v3',
+      auth: oauth2Client,
+    });
+
+    const videoIds = account.videos.map((video) => video.id);
+    const response = await youtube.videos.list({
+      part: 'statistics',
+      id: videoIds.join(','),
+    });
+
+    const statistics = response.data.items.map((item) => {
+      const stat = item.statistics;
+      return {
+        id: item.id,
+        view_count: parseInt(stat.viewCount) || 0,
+        like_count: parseInt(stat.likeCount) || 0,
+        dislike_count: parseInt(stat.dislikeCount) || 0,
+        comment_count: parseInt(stat.commentCount) || 0,
+      };
+    });
+
+    const totalViews = statistics.reduce(
+      (sum, stat) => sum + stat.view_count,
+      0
+    );
+    const totalLikes = statistics.reduce(
+      (sum, stat) => sum + stat.like_count,
+      0
+    );
+    const totalDislikes = statistics.reduce(
+      (sum, stat) => sum + stat.dislike_count,
+      0
+    );
+    const totalComments = statistics.reduce(
+      (sum, stat) => sum + stat.comment_count,
+      0
+    );
+
+    return res.status(200).json({
+      total_items: statistics.length,
+      total: {
+        view_count: totalViews,
+        like_count: totalLikes,
+        dislike_count: totalDislikes,
+        comment_count: totalComments,
+      },
+      items: statistics,
+    });
+  } catch (error) {
+    console.error('Error fetching YouTube statistics:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+async function getAccountsController(req, res) {
+  try {
+    let accounts = await getSocialAccountOfUser({
+      userId: req.user.id,
+      platform: 'youtube',
+    });
+
+    accounts = accounts.map((account) => ({
+      id: account._id,
+      username: account.username,
+      avatar: account.avatar,
+      account_id: account.account_id,
+    }));
+
+    return res.status(200).json({
+      total_accounts: accounts.length,
+      accounts: accounts,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+async function getUploadedVideosController(req, res) {
+  try {
+    const account = await getSocialAccount({
+      userId: req.user.id,
+      platform: 'youtube',
+      accountId: req.query.account_id,
+    });
+    if (!account) {
+      return res.status(404).json({ message: 'YouTube account not found' });
+    }
+
+    const oauth2Client = createOauth2Client();
+    oauth2Client.setCredentials(account.tokens);
+
+    const youtube = google.youtube({
+      version: 'v3',
+      auth: oauth2Client,
+    });
+
+    const videoIds = account.videos.map((video) => video.id);
+    const response = await youtube.videos.list({
+      part: 'id,snippet,status',
+      id: videoIds.join(','),
+    });
+
+    const data = response.data.items.map((item) => ({
+      id: item.id,
+      title: item.snippet.title,
+      description: item.snippet.description,
+      thumbnail: item.snippet.thumbnails.default.url,
+      privacy_status: item.status.privacyStatus,
+      url: `https://www.youtube.com/watch?v=${item.id}`,
+    }));
+
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error('Error fetching uploaded videos:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+async function getTopViewVideosController(req, res) {
+  try {
+    const oauth2Client = createOauth2Client();
+    const account = await getSocialAccount({
+      userId: req.user.id,
+      platform: 'youtube',
+      accountId: req.query.account_id,
+    });
+    if (!account) {
+      return res.status(404).json({ message: 'YouTube account not found' });
+    }
+    oauth2Client.setCredentials(account.tokens);
+    const youtube = google.youtube({
+      version: 'v3',
+      auth: oauth2Client,
+    });
+    const videoIds = account.videos.map((video) => video.id);
+    const response = await youtube.videos.list({
+      part: 'id,snippet,statistics',
+      id: videoIds.join(','),
+    });
+    const videos = response.data.items.map((item) => ({
+      id: item.id,
+      title: item.snippet.title,
+      view_count: parseInt(item.statistics.viewCount) || 0,
+    }));
+    videos.sort((a, b) => b.view_count - a.view_count);
+    return res.status(200).json(videos.slice(0, 10));
+  } catch (error) {
+    console.error('Error fetching top view videos:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+module.exports = {
+  authController,
+  authCallbackController,
+  uploadVideoController,
+  getStatisticsController,
+  getUploadedVideosController,
+  getTopViewVideosController,
+  getAccountsController,
+};

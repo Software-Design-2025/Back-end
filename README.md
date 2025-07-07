@@ -36,6 +36,7 @@ Server sẽ chạy tại [http://localhost:3000](http://localhost:3000) (hoặc 
 ---
 
 ### 4. Chạy dev tool inngest
+
 ```bash
 npx inngest-cli@latest dev
 ```
@@ -47,44 +48,56 @@ npx inngest-cli@latest dev
 ### 1. User APIs
 
 #### GET /routers/users/detail
+
 Lấy thông tin user theo id.
+
 - Query: `id`
 - Response: user object
 
 #### POST /routers/users/update-credits
+
 Cập nhật credits cho user.
+
 ```json
 {
   "id": "userId",
   "credits": 10
 }
 ```
+
 **Response:**
+
 ```json
 {
-  	"_id": "683ea39812741298576bd529"
+  "_id": "683ea39812741298576bd529"
 }
 ```
 
 #### 1.2. Local login
+
 **POST** `/api/auth/login/local`
+
 ```json
 {
-    "username": "minhhuy",
-    "password": "123456789"
+  "username": "minhhuy",
+  "password": "123456789"
 }
 ```
-**Response:**  
+
+**Response:**
+
 ```json
 {
-	"message": "Logged in successfully"
+  "message": "Logged in successfully"
 }
 ```
 
 #### 1.3. Logout
+
 **GET** `/api/auth/logout`
 
 #### 1.4. Refresh Token
+
 **GET** `/api/auth/refresh-token`
 
 ---
@@ -92,7 +105,9 @@ Cập nhật credits cho user.
 ### 2. Video APIs
 
 #### POST /routers/video/save-data
+
 Lưu video mới.
+
 ```json
 {
   "script": "...",
@@ -103,20 +118,25 @@ Lưu video mới.
   "public": true
 }
 ```
+
 - Response: `{ id: "..." }`
 
 #### GET /routers/video/get-data?id=VIDEO_ID
+
 Lấy thông tin video theo id.
 
 #### POST /routers/video/generate-script
+
 Sinh script video AI (nếu có).
 
 #### GET /routers/video/by-creator?id=USER_ID
+
 Lấy danh sách video theo user.
 
 #### GET /api/video/public
 
 **Query params**
+
 - page (optional, default = 1)
 - limit (optional, default = 10)
 
@@ -145,7 +165,9 @@ Lấy danh sách video theo user.
 ```
 
 #### PATCH /routers/video/public-status
+
 Cập nhật trạng thái public cho video.
+
 ```json
 {
   "videoId": "...",
@@ -154,7 +176,9 @@ Cập nhật trạng thái public cho video.
 ```
 
 #### POST /routers/video/save-edit
+
 Lưu cấu hình chỉnh sửa video.
+
 ```json
 {
   "videoId": "...",
@@ -172,7 +196,9 @@ Lưu cấu hình chỉnh sửa video.
 ```
 
 #### POST /routers/video/save-link
+
 Lưu link video output.
+
 ```json
 {
   "videoId": "...",
@@ -181,6 +207,7 @@ Lưu link video output.
 ```
 
 #### POST /routers/video/generate-caption
+
 Sinh caption từ audio.
 
 #### POST /api/video/generate-image
@@ -204,7 +231,9 @@ Sinh caption từ audio.
 ```
 
 #### POST /routers/video/add-favorite
+
 Thêm video vào danh sách yêu thích.
+
 ```json
 {
   "userId": "...",
@@ -213,10 +242,13 @@ Thêm video vào danh sách yêu thích.
 ```
 
 #### GET /routers/video/favorites?userId=...
+
 Lấy danh sách video đã yêu thích.
 
 #### POST /routers/video/remove-favorite
+
 Xóa video khỏi danh sách yêu thích.
+
 ```json
 {
   "userId": "...",
@@ -229,32 +261,43 @@ Xóa video khỏi danh sách yêu thích.
 ### 3. Audio APIs
 
 #### POST /routers/audio/generate
+
 Sinh audio từ text.
+
 ```json
 {
   "text": "...",
   "id": "audioId"
 }
 ```
+
 - Response: `{ Result: "audioUrl" }`
 
 #### POST /routers/audio/save
+
 Upload file audio lên Firebase.
+
 - Form-data: `audio` (file), `filename` (optional)
 - Response: `{ url: "audioUrl" }`
 
 #### GET /routers/audio/link?name=Happy.mp3
+
 Lấy link audio mẫu từ Firebase.
+
 - Response: `{ url: "audioUrl" }`
 
 #### GET /routers/audio/proxy?url=...
+
 Proxy audio từ Firebase (bypass CORS).
+
 ### 3. Topic
 
 #### 3.1. Get trending topics using AI
+
 **GET** `/api/topics/ai?keyword=`
 
-**Response:**  
+**Response:**
+
 ```json
 [
   {
@@ -266,12 +309,14 @@ Proxy audio từ Firebase (bypass CORS).
 ```
 
 #### 3.2. Get topic from Springer Nature
+
 **GET** `/api/topic/springer-nature?keyword=`
 
 **Response:**
+
 ```json
 [
-    {
+  {
     "id": "doi:10.1007/s43621-025-01069-0",
     "title": "Multi-model MCDM framework for sustainable renewable energy selection in India: integrating CRITIC-EDAS-CODAS-CoCoSo",
     "url": "http://dx.doi.org/10.1007/s43621-025-01069-0",
@@ -280,30 +325,37 @@ Proxy audio từ Firebase (bypass CORS).
 ]
 ```
 
-
 ### 4. Inngest APIs
 
 #### POST /api/inngest/render-cloud-video
+
 Trigger Inngest function RenderCloudVideo.
+
 ```json
 {
-  // event data 
+  // event data
 }
 ```
 
 #### POST /api/inngest/render-promo-video
+
 Trigger Inngest function render/promo-video.
+
 ```json
 {
   "videoId": "...",
   "videoData": { ... }
 }
 ```
+
 - Response: `{ url: "videoUrl" }`
+
 ---
 
 #### 4.3. Save Video Data
+
 **POST** `/routers/save-video-data`
+
 ```json
 {
   "script": "...",
@@ -313,14 +365,18 @@ Trigger Inngest function render/promo-video.
   "createdBy": "user@email.com"
 }
 ```
+
 **Response:**
+
 ```json
 { "id": "..." }
 ```
 
 #### 4.4. Get Video Data by ID
+
 **GET** `/routers/get-video-data?id=VIDEO_ID`
 **Response:**
+
 ```json
 {
   "id": "...",
@@ -333,14 +389,18 @@ Trigger Inngest function render/promo-video.
 ```
 
 #### 4.5. Update Video Public Status
+
 **PATCH** `/routers/public-video`
+
 ```json
 {
   "videoId": "video_id",
   "public": true
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "Video public status updated",
@@ -349,10 +409,12 @@ Trigger Inngest function render/promo-video.
 ```
 
 #### 4.6. Get Videos by Creator
+
 **GET** `/routers/get-video-createdBy?email=EMAIL`
 **Response:** Array các video.
 
 #### 4.7. Get Public Videos (Router)
+
 **GET** `/routers/get-video-public`
 **Response:** Array các video public.
 
@@ -361,14 +423,18 @@ Trigger Inngest function render/promo-video.
 ### 5. Favorite Video
 
 #### 5.1. Add Favorite Video
+
 **POST** `/routers/add-favorite-video`
+
 ```json
 {
   "userEmail": "user@email.com",
   "videoId": "video_id"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "Added to favorites",
@@ -377,14 +443,18 @@ Trigger Inngest function render/promo-video.
 ```
 
 #### 5.2. Remove Favorite Video
+
 **POST** `/routers/remove-favorite-video`
+
 ```json
 {
   "userEmail": "user@email.com",
   "videoId": "video_id"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "message": "Removed from favorites"
@@ -392,6 +462,7 @@ Trigger Inngest function render/promo-video.
 ```
 
 #### 5.3. Get Favorite Videos
+
 **GET** `/routers/get-favorite-videos?userEmail=EMAIL`
 **Response:** Array các video đã yêu thích.
 
@@ -400,10 +471,13 @@ Trigger Inngest function render/promo-video.
 ### 6. User
 
 #### 6.1. Update avatar
+
 **PATCH** `/api/users/:id/avatar`
 
 #### 6.2. Update profile (fullname)
+
 **PATCH** `/api/users/:id/profile`
+
 ```json
 {
   "fullname": "Nguyen Tran Van Anh"
@@ -411,8 +485,10 @@ Trigger Inngest function render/promo-video.
 ```
 
 #### 6.3. Get user
+
 **GET** `/api/users/:id`
 **Response:**
+
 ```json
 {
   "id": "681869ff7e7e9262a28e06b4",
@@ -428,27 +504,37 @@ Trigger Inngest function render/promo-video.
 ### 7. AI Features
 
 #### 7.1. Generate Video Script
+
 **POST** `/routers/generate-video-script`
+
 ```json
 {
   "prompt": "Your prompt for the AI model"
 }
 ```
+
 **Response:**
+
 ```json
 {
-  "result": { /* AI-generated script as JSON */ }
+  "result": {
+    /* AI-generated script as JSON */
+  }
 }
 ```
 
 #### 7.2. Generate Image
+
 **POST** `/routers/generate-image`
+
 ```json
 {
   "prompt": "Describe the image you want to generate"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "result": "https://...firebase.../your-image.png"
@@ -456,14 +542,18 @@ Trigger Inngest function render/promo-video.
 ```
 
 #### 7.3. Generate Audio (Text-to-Speech)
+
 **POST** `/routers/generate-audio`
+
 ```json
 {
   "text": "Text to convert to speech",
   "id": "unique-id-for-audio"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "Result": "https://...firebase.../your-audio.mp3"
@@ -471,15 +561,19 @@ Trigger Inngest function render/promo-video.
 ```
 
 #### 7.4. Generate Caption (Speech-to-Text)
+
 **POST** `/routers/generate-caption`
+
 ```json
 {
   "audioFileUrl": "https://...firebase.../your-audio.mp3"
 }
 ```
+
 **Response:** Array các caption.
 
 #### 7.5. Proxy Audio (Bypass CORS)
+
 **GET** `/routers/proxy-audio?url=ENCODED_AUDIO_URL`
 **Description:** Proxy audio file from a remote URL (e.g. Firebase Storage) to bypass CORS restrictions. Supports HTTP Range requests for seeking.
 
@@ -488,7 +582,9 @@ Trigger Inngest function render/promo-video.
 ### 8. Video Edit Config
 
 #### 8.1. Save Video Edit Config
+
 **POST** `/routers/save-video-edit/api/save-video-edit`
+
 ```json
 {
   "videoId": "video_id",
@@ -504,7 +600,9 @@ Trigger Inngest function render/promo-video.
   "screenSize": "1920x1080"
 }
 ```
+
 **Response:**
+
 ```json
 {
   "success": true,
@@ -517,9 +615,12 @@ Trigger Inngest function render/promo-video.
 ### 9. Audio File Upload
 
 #### 9.1. Save Audio File to Firebase
+
 **POST** `/routers/save-audio-file`
+
 - Form-data: `audio` (file), `filename` (optional)
-**Response:**
+  **Response:**
+
 ```json
 {
   "url": "https://...firebase.../your-audio.mp3"
@@ -531,17 +632,21 @@ Trigger Inngest function render/promo-video.
 ### 10. User Detail & Credits
 
 #### 10.1. Get User Detail
+
 **GET** `/routers/get-user-detail?email=EMAIL`
 **Response:** Thông tin user.
 
 #### 10.2. Update User Credits
+
 **POST** `/routers/update-user-credits`
+
 ```json
 {
   "email": "user@email.com",
   "credits": 10
 }
 ```
+
 **Response:** Thông tin user đã cập nhật.
 
 ---
@@ -682,6 +787,7 @@ privacy_status: public, private, or unlisted.
 ```
 
 **Response**
+
 ```json
 {
   "url": "https://firebasestorage.googleapis.com/v0/b/ai-short-video-generator-56c7e.firebasestorage.app/o/ai-short-video-files%2Faudio%2Fabbc46d6-833b-45c6-90c8-34c7b7d2f7ab.mp3?alt=media&token=be356e83-480f-4f1b-a64e-0fd5d62c9b54"
@@ -767,7 +873,7 @@ privacy_status: public, private, or unlisted.
   "scenes": [
     {
       "script": "The Powerpuff Girls is a beloved animated television series that follows the adventures of three superpowered kindergarten-aged sisters who fight crime and protect the city of Townsville. Created by Professor Utonium in a lab experiment gone wrong, the girls were born from a mixture of sugar, spice, everything nice, and the mysterious Chemical X.",
-        "image": "https://th.bing.com/th/id/OIP.MV-msxuUW_VXG0asK_76CAHaEK?w=1000&h=563&rs=1&pid=ImgDetMain&cb=idpwebpc2"
+      "image": "https://th.bing.com/th/id/OIP.MV-msxuUW_VXG0asK_76CAHaEK?w=1000&h=563&rs=1&pid=ImgDetMain&cb=idpwebpc2"
     },
     {
       "script": "Blossom is the self-proclaimed leader of the trio, known for her intelligence, level-headedness, and strategic thinking. She wears pink and represents order and responsibility.",
@@ -840,6 +946,7 @@ privacy_status: public, private, or unlisted.
 **GET** `/api/v2/videos`
 
 **Response**
+
 ```json
 {
   "data": [
