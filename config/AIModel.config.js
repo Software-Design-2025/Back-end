@@ -29,7 +29,6 @@ async function sendPromptToGemini(prompt) {
   }
 
   const result = await response.json();
-  // Lấy text trả về từ Gemini
   const text = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
   return text;
 }
